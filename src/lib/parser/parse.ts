@@ -5,19 +5,22 @@ import {
   ProgramContext,
   StrictDomainLangParser,
 } from "./generated/StrictDomainLangParser.js";
+import { ParseTreeJson, parseTreeToJson } from "./treeToJson.js";
 
 export interface ParseResult {
   readonly parser: StrictDomainLangParser;
   readonly tree: ProgramContext;
 }
 
-export function parse(source: string): ParseResult {
+export function parse(source: string): ParseTreeJson {
   const lexer = new StrictDomainLangLexer(CharStream.fromString(source));
   const tokenStream = new CommonTokenStream(lexer);
   const parser = new StrictDomainLangParser(tokenStream);
 
-  return {
+  const res = {
     parser,
     tree: parser.program(),
   };
+
+  return parseTreeToJson(res.tree, res.parser);
 }
