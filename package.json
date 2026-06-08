@@ -11,12 +11,12 @@
   ],
   "scripts": {
     "dev": "tsc src/index.ts",
-    "generate:parser": "antlr-ng -Dlanguage=TypeScript -o src/parser/generated grammar/StrictDomainLangLexer.g4 grammar/StrictDomainLangParser.g4",
+    "generate:parser": "antlr-ng -Dlanguage=TypeScript -o src/lib/parser/generated grammar/StrictDomainLangLexer.g4 grammar/StrictDomainLangParser.g4",
     "build": "tsup src/index.ts --format esm --dts --clean",
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit",
-    "fix": "prettier --write src/**/*.ts",
-    "lint": "eslint src/**/*.ts && prettier --check src/**/*.ts && npm run typecheck"
+    "fix": "prettier --write 'src/**/*.ts'",
+    "lint": "eslint 'src/**/*.ts' && prettier --check 'src/**/*.ts' && npm run typecheck"
   },
   "dependencies": {
     "antlr4ng": "^3.0.16",
