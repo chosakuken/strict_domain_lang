@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { tokenize } from "../lib/lexer/tokenize.js";
 
 export function createLexerCommand(): Command {
-  return new Command("lexer")
+  return new Command("lex")
     .description("")
     .argument("<file>", "source file path")
     .action(async (file: string) => {

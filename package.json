@@ -4,7 +4,7 @@
   "description": "厳格な定義域を設けた言語処理系",
   "type": "module",
   "bin": {
-    "stl": "./dist/index.js"
+    "sdl": "./dist/index.js"
   },
   "files": [
     "dist"

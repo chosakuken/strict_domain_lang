@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { createLexerCommand } from "./commands/lexer.js";
-import { createParserCommand } from "./commands/parser.js";
+import { createLexerCommand } from "./commands/lex.js";
+import { createParserCommand } from "./commands/parse.js";
 
 export function createCli(): Command {
   const program = new Command();
 
   program
-    .name("stl")
+    .name("sdl")
     .description("Strict Domain Language command line tool")
     .version("0.0.0")
     .action(() => {
