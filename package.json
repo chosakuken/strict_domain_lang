@@ -1,0 +1,30 @@
+{
+  "name": "strict-domain-lang",
+  "version": "0.0.0",
+  "description": "厳格な定義域を設けた言語処理系",
+  "type": "module",
+  "bin": {
+    "stl": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc src/index.ts",
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "tsup": "^8.5.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
