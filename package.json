@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "tsc src/index.ts",
-    "generate:parser": "antlr-ng -Dlanguage=TypeScript -o src/lib/parser/generated grammar/StrictDomainLangLexer.g4 grammar/StrictDomainLangParser.g4",
+    "gen:parser": "antlr-ng -Dlanguage=TypeScript -o src/lib/parser/generated grammar/StrictDomainLangLexer.g4 grammar/StrictDomainLangParser.g4",
     "build": "tsup src/index.ts --format esm --dts --clean",
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit",

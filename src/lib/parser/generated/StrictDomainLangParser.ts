@@ -7,69 +7,40 @@ import { StrictDomainLangParserListener } from "./StrictDomainLangParserListener
 type int = number;
 
 export class StrictDomainLangParser extends antlr.Parser {
-  public static readonly LET = 1;
-  public static readonly ASSIGN = 2;
-  public static readonly SEMI = 3;
-  public static readonly LPAREN = 4;
-  public static readonly RPAREN = 5;
-  public static readonly PLUS = 6;
-  public static readonly MINUS = 7;
-  public static readonly STAR = 8;
-  public static readonly SLASH = 9;
-  public static readonly NUMBER = 10;
-  public static readonly IDENTIFIER = 11;
-  public static readonly LINE_COMMENT = 12;
-  public static readonly WS = 13;
+  public static readonly INT = 1;
+  public static readonly PLUS = 2;
+  public static readonly MINUS = 3;
+  public static readonly MUL = 4;
+  public static readonly DIV = 5;
+  public static readonly LPAREN = 6;
+  public static readonly RPAREN = 7;
+  public static readonly WS = 8;
   public static readonly RULE_program = 0;
-  public static readonly RULE_statement = 1;
-  public static readonly RULE_variableDeclaration = 2;
-  public static readonly RULE_assignmentStatement = 3;
-  public static readonly RULE_expressionStatement = 4;
-  public static readonly RULE_expression = 5;
-  public static readonly RULE_additiveExpression = 6;
-  public static readonly RULE_multiplicativeExpression = 7;
-  public static readonly RULE_primaryExpression = 8;
+  public static readonly RULE_expr = 1;
 
   public static readonly literalNames = [
     null,
-    "'let'",
-    "'='",
-    "';'",
-    "'('",
-    "')'",
+    null,
     "'+'",
     "'-'",
     "'*'",
     "'/'",
+    "'('",
+    "')'",
   ];
 
   public static readonly symbolicNames = [
     null,
-    "LET",
-    "ASSIGN",
-    "SEMI",
-    "LPAREN",
-    "RPAREN",
+    "INT",
     "PLUS",
     "MINUS",
-    "STAR",
-    "SLASH",
-    "NUMBER",
-    "IDENTIFIER",
-    "LINE_COMMENT",
+    "MUL",
+    "DIV",
+    "LPAREN",
+    "RPAREN",
     "WS",
   ];
-  public static readonly ruleNames = [
-    "program",
-    "statement",
-    "variableDeclaration",
-    "assignmentStatement",
-    "expressionStatement",
-    "expression",
-    "additiveExpression",
-    "multiplicativeExpression",
-    "primaryExpression",
-  ];
+  public static readonly ruleNames = ["program", "expr"];
 
   public get grammarFileName(): string {
     return "StrictDomainLangParser.g4";
@@ -106,25 +77,12 @@ export class StrictDomainLangParser extends antlr.Parser {
   public program(): ProgramContext {
     let localContext = new ProgramContext(this.context, this.state);
     this.enterRule(localContext, 0, StrictDomainLangParser.RULE_program);
-    let _la: number;
     try {
       this.enterOuterAlt(localContext, 1);
       {
-        this.state = 21;
-        this.errorHandler.sync(this);
-        _la = this.tokenStream.LA(1);
-        while ((_la & ~0x1f) === 0 && ((1 << _la) & 3090) !== 0) {
-          {
-            {
-              this.state = 18;
-              this.statement();
-            }
-          }
-          this.state = 23;
-          this.errorHandler.sync(this);
-          _la = this.tokenStream.LA(1);
-        }
-        this.state = 24;
+        this.state = 4;
+        this.expr(0);
+        this.state = 5;
         this.match(StrictDomainLangParser.EOF);
       }
     } catch (re) {
@@ -139,195 +97,158 @@ export class StrictDomainLangParser extends antlr.Parser {
     }
     return localContext;
   }
-  public statement(): StatementContext {
-    let localContext = new StatementContext(this.context, this.state);
-    this.enterRule(localContext, 2, StrictDomainLangParser.RULE_statement);
-    try {
-      this.state = 29;
-      this.errorHandler.sync(this);
-      switch (
-        this.interpreter.adaptivePredict(this.tokenStream, 1, this.context)
-      ) {
-        case 1:
-          this.enterOuterAlt(localContext, 1);
-          {
-            this.state = 26;
-            this.variableDeclaration();
-          }
-          break;
-        case 2:
-          this.enterOuterAlt(localContext, 2);
-          {
-            this.state = 27;
-            this.assignmentStatement();
-          }
-          break;
-        case 3:
-          this.enterOuterAlt(localContext, 3);
-          {
-            this.state = 28;
-            this.expressionStatement();
-          }
-          break;
-      }
-    } catch (re) {
-      if (re instanceof antlr.RecognitionException) {
-        this.errorHandler.reportError(this, re);
-        this.errorHandler.recover(this, re);
-      } else {
-        throw re;
-      }
-    } finally {
-      this.exitRule();
+
+  public expr(): ExprContext;
+  public expr(_p: number): ExprContext;
+  public expr(_p?: number): ExprContext {
+    if (_p === undefined) {
+      _p = 0;
     }
-    return localContext;
-  }
-  public variableDeclaration(): VariableDeclarationContext {
-    let localContext = new VariableDeclarationContext(this.context, this.state);
-    this.enterRule(
+
+    let parentContext = this.context;
+    let parentState = this.state;
+    let localContext = new ExprContext(this.context, parentState);
+    let previousContext = localContext;
+    let _startState = 2;
+    this.enterRecursionRule(
       localContext,
-      4,
-      StrictDomainLangParser.RULE_variableDeclaration,
-    );
-    try {
-      this.enterOuterAlt(localContext, 1);
-      {
-        this.state = 31;
-        this.match(StrictDomainLangParser.LET);
-        this.state = 32;
-        this.match(StrictDomainLangParser.IDENTIFIER);
-        this.state = 33;
-        this.match(StrictDomainLangParser.ASSIGN);
-        this.state = 34;
-        this.expression();
-        this.state = 35;
-        this.match(StrictDomainLangParser.SEMI);
-      }
-    } catch (re) {
-      if (re instanceof antlr.RecognitionException) {
-        this.errorHandler.reportError(this, re);
-        this.errorHandler.recover(this, re);
-      } else {
-        throw re;
-      }
-    } finally {
-      this.exitRule();
-    }
-    return localContext;
-  }
-  public assignmentStatement(): AssignmentStatementContext {
-    let localContext = new AssignmentStatementContext(this.context, this.state);
-    this.enterRule(
-      localContext,
-      6,
-      StrictDomainLangParser.RULE_assignmentStatement,
-    );
-    try {
-      this.enterOuterAlt(localContext, 1);
-      {
-        this.state = 37;
-        this.match(StrictDomainLangParser.IDENTIFIER);
-        this.state = 38;
-        this.match(StrictDomainLangParser.ASSIGN);
-        this.state = 39;
-        this.expression();
-        this.state = 40;
-        this.match(StrictDomainLangParser.SEMI);
-      }
-    } catch (re) {
-      if (re instanceof antlr.RecognitionException) {
-        this.errorHandler.reportError(this, re);
-        this.errorHandler.recover(this, re);
-      } else {
-        throw re;
-      }
-    } finally {
-      this.exitRule();
-    }
-    return localContext;
-  }
-  public expressionStatement(): ExpressionStatementContext {
-    let localContext = new ExpressionStatementContext(this.context, this.state);
-    this.enterRule(
-      localContext,
-      8,
-      StrictDomainLangParser.RULE_expressionStatement,
-    );
-    try {
-      this.enterOuterAlt(localContext, 1);
-      {
-        this.state = 42;
-        this.expression();
-        this.state = 43;
-        this.match(StrictDomainLangParser.SEMI);
-      }
-    } catch (re) {
-      if (re instanceof antlr.RecognitionException) {
-        this.errorHandler.reportError(this, re);
-        this.errorHandler.recover(this, re);
-      } else {
-        throw re;
-      }
-    } finally {
-      this.exitRule();
-    }
-    return localContext;
-  }
-  public expression(): ExpressionContext {
-    let localContext = new ExpressionContext(this.context, this.state);
-    this.enterRule(localContext, 10, StrictDomainLangParser.RULE_expression);
-    try {
-      this.enterOuterAlt(localContext, 1);
-      {
-        this.state = 45;
-        this.additiveExpression();
-      }
-    } catch (re) {
-      if (re instanceof antlr.RecognitionException) {
-        this.errorHandler.reportError(this, re);
-        this.errorHandler.recover(this, re);
-      } else {
-        throw re;
-      }
-    } finally {
-      this.exitRule();
-    }
-    return localContext;
-  }
-  public additiveExpression(): AdditiveExpressionContext {
-    let localContext = new AdditiveExpressionContext(this.context, this.state);
-    this.enterRule(
-      localContext,
-      12,
-      StrictDomainLangParser.RULE_additiveExpression,
+      2,
+      StrictDomainLangParser.RULE_expr,
+      _p,
     );
     let _la: number;
     try {
+      let alternative: number;
       this.enterOuterAlt(localContext, 1);
       {
-        this.state = 47;
-        this.multiplicativeExpression();
-        this.state = 52;
+        this.state = 13;
         this.errorHandler.sync(this);
-        _la = this.tokenStream.LA(1);
-        while (_la === 6 || _la === 7) {
-          {
+        switch (this.tokenStream.LA(1)) {
+          case StrictDomainLangParser.LPAREN:
             {
-              this.state = 48;
-              _la = this.tokenStream.LA(1);
-              if (!(_la === 6 || _la === 7)) {
-                this.errorHandler.recoverInline(this);
-              } else {
-                this.errorHandler.reportMatch(this);
-                this.consume();
+              localContext = new ParensContext(localContext);
+              this.context = localContext;
+              previousContext = localContext;
+
+              this.state = 8;
+              this.match(StrictDomainLangParser.LPAREN);
+              this.state = 9;
+              this.expr(0);
+              this.state = 10;
+              this.match(StrictDomainLangParser.RPAREN);
+            }
+            break;
+          case StrictDomainLangParser.INT:
+            {
+              localContext = new IntContext(localContext);
+              this.context = localContext;
+              previousContext = localContext;
+              this.state = 12;
+              this.match(StrictDomainLangParser.INT);
+            }
+            break;
+          default:
+            throw new antlr.NoViableAltException(this);
+        }
+        this.context!.stop = this.tokenStream.LT(-1);
+        this.state = 23;
+        this.errorHandler.sync(this);
+        alternative = this.interpreter.adaptivePredict(
+          this.tokenStream,
+          2,
+          this.context,
+        );
+        while (
+          alternative !== 2 &&
+          alternative !== antlr.ATN.INVALID_ALT_NUMBER
+        ) {
+          if (alternative === 1) {
+            if (this.parseListeners != null) {
+              this.triggerExitRuleEvent();
+            }
+            previousContext = localContext;
+            {
+              this.state = 21;
+              this.errorHandler.sync(this);
+              switch (
+                this.interpreter.adaptivePredict(
+                  this.tokenStream,
+                  1,
+                  this.context,
+                )
+              ) {
+                case 1:
+                  {
+                    localContext = new MulDivContext(
+                      new ExprContext(parentContext, parentState),
+                    );
+                    this.pushNewRecursionContext(
+                      localContext,
+                      _startState,
+                      StrictDomainLangParser.RULE_expr,
+                    );
+                    this.state = 15;
+                    if (!this.precpred(this.context, 4)) {
+                      throw this.createFailedPredicateException(
+                        "this.precpred(this.context, 4)",
+                      );
+                    }
+                    this.state = 16;
+                    (localContext as MulDivContext)._op =
+                      this.tokenStream.LT(1);
+                    _la = this.tokenStream.LA(1);
+                    if (!(_la === 4 || _la === 5)) {
+                      (localContext as MulDivContext)._op =
+                        this.errorHandler.recoverInline(this);
+                    } else {
+                      this.errorHandler.reportMatch(this);
+                      this.consume();
+                    }
+                    this.state = 17;
+                    this.expr(5);
+                  }
+                  break;
+                case 2:
+                  {
+                    localContext = new AddSubContext(
+                      new ExprContext(parentContext, parentState),
+                    );
+                    this.pushNewRecursionContext(
+                      localContext,
+                      _startState,
+                      StrictDomainLangParser.RULE_expr,
+                    );
+                    this.state = 18;
+                    if (!this.precpred(this.context, 3)) {
+                      throw this.createFailedPredicateException(
+                        "this.precpred(this.context, 3)",
+                      );
+                    }
+                    this.state = 19;
+                    (localContext as AddSubContext)._op =
+                      this.tokenStream.LT(1);
+                    _la = this.tokenStream.LA(1);
+                    if (!(_la === 2 || _la === 3)) {
+                      (localContext as AddSubContext)._op =
+                        this.errorHandler.recoverInline(this);
+                    } else {
+                      this.errorHandler.reportMatch(this);
+                      this.consume();
+                    }
+                    this.state = 20;
+                    this.expr(4);
+                  }
+                  break;
               }
-              this.state = 49;
-              this.multiplicativeExpression();
             }
           }
-          this.state = 54;
+          this.state = 25;
           this.errorHandler.sync(this);
-          _la = this.tokenStream.LA(1);
+          alternative = this.interpreter.adaptivePredict(
+            this.tokenStream,
+            2,
+            this.context,
+          );
         }
       }
     } catch (re) {
@@ -338,140 +259,47 @@ export class StrictDomainLangParser extends antlr.Parser {
         throw re;
       }
     } finally {
-      this.exitRule();
-    }
-    return localContext;
-  }
-  public multiplicativeExpression(): MultiplicativeExpressionContext {
-    let localContext = new MultiplicativeExpressionContext(
-      this.context,
-      this.state,
-    );
-    this.enterRule(
-      localContext,
-      14,
-      StrictDomainLangParser.RULE_multiplicativeExpression,
-    );
-    let _la: number;
-    try {
-      this.enterOuterAlt(localContext, 1);
-      {
-        this.state = 55;
-        this.primaryExpression();
-        this.state = 60;
-        this.errorHandler.sync(this);
-        _la = this.tokenStream.LA(1);
-        while (_la === 8 || _la === 9) {
-          {
-            {
-              this.state = 56;
-              _la = this.tokenStream.LA(1);
-              if (!(_la === 8 || _la === 9)) {
-                this.errorHandler.recoverInline(this);
-              } else {
-                this.errorHandler.reportMatch(this);
-                this.consume();
-              }
-              this.state = 57;
-              this.primaryExpression();
-            }
-          }
-          this.state = 62;
-          this.errorHandler.sync(this);
-          _la = this.tokenStream.LA(1);
-        }
-      }
-    } catch (re) {
-      if (re instanceof antlr.RecognitionException) {
-        this.errorHandler.reportError(this, re);
-        this.errorHandler.recover(this, re);
-      } else {
-        throw re;
-      }
-    } finally {
-      this.exitRule();
-    }
-    return localContext;
-  }
-  public primaryExpression(): PrimaryExpressionContext {
-    let localContext = new PrimaryExpressionContext(this.context, this.state);
-    this.enterRule(
-      localContext,
-      16,
-      StrictDomainLangParser.RULE_primaryExpression,
-    );
-    try {
-      this.state = 69;
-      this.errorHandler.sync(this);
-      switch (this.tokenStream.LA(1)) {
-        case StrictDomainLangParser.NUMBER:
-          this.enterOuterAlt(localContext, 1);
-          {
-            this.state = 63;
-            this.match(StrictDomainLangParser.NUMBER);
-          }
-          break;
-        case StrictDomainLangParser.IDENTIFIER:
-          this.enterOuterAlt(localContext, 2);
-          {
-            this.state = 64;
-            this.match(StrictDomainLangParser.IDENTIFIER);
-          }
-          break;
-        case StrictDomainLangParser.LPAREN:
-          this.enterOuterAlt(localContext, 3);
-          {
-            this.state = 65;
-            this.match(StrictDomainLangParser.LPAREN);
-            this.state = 66;
-            this.expression();
-            this.state = 67;
-            this.match(StrictDomainLangParser.RPAREN);
-          }
-          break;
-        default:
-          throw new antlr.NoViableAltException(this);
-      }
-    } catch (re) {
-      if (re instanceof antlr.RecognitionException) {
-        this.errorHandler.reportError(this, re);
-        this.errorHandler.recover(this, re);
-      } else {
-        throw re;
-      }
-    } finally {
-      this.exitRule();
+      this.unrollRecursionContexts(parentContext);
     }
     return localContext;
   }
 
+  public override sempred(
+    localContext: antlr.ParserRuleContext | null,
+    ruleIndex: number,
+    predIndex: number,
+  ): boolean {
+    switch (ruleIndex) {
+      case 1:
+        return this.expr_sempred(localContext as ExprContext, predIndex);
+    }
+    return true;
+  }
+  private expr_sempred(
+    localContext: ExprContext | null,
+    predIndex: number,
+  ): boolean {
+    switch (predIndex) {
+      case 0:
+        return this.precpred(this.context, 4);
+      case 1:
+        return this.precpred(this.context, 3);
+    }
+    return true;
+  }
+
   public static readonly _serializedATN: number[] = [
-    4, 1, 13, 72, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7, 4, 2,
-    5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 1, 0, 5, 0, 20, 8, 0, 10, 0,
-    12, 0, 23, 9, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 3, 1, 30, 8, 1, 1, 2, 1, 2,
-    1, 2, 1, 2, 1, 2, 1, 2, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 1,
-    5, 1, 5, 1, 6, 1, 6, 1, 6, 5, 6, 51, 8, 6, 10, 6, 12, 6, 54, 9, 6, 1, 7, 1,
-    7, 1, 7, 5, 7, 59, 8, 7, 10, 7, 12, 7, 62, 9, 7, 1, 8, 1, 8, 1, 8, 1, 8, 1,
-    8, 1, 8, 3, 8, 70, 8, 8, 1, 8, 0, 0, 9, 0, 2, 4, 6, 8, 10, 12, 14, 16, 0, 2,
-    1, 0, 6, 7, 1, 0, 8, 9, 69, 0, 21, 1, 0, 0, 0, 2, 29, 1, 0, 0, 0, 4, 31, 1,
-    0, 0, 0, 6, 37, 1, 0, 0, 0, 8, 42, 1, 0, 0, 0, 10, 45, 1, 0, 0, 0, 12, 47,
-    1, 0, 0, 0, 14, 55, 1, 0, 0, 0, 16, 69, 1, 0, 0, 0, 18, 20, 3, 2, 1, 0, 19,
-    18, 1, 0, 0, 0, 20, 23, 1, 0, 0, 0, 21, 19, 1, 0, 0, 0, 21, 22, 1, 0, 0, 0,
-    22, 24, 1, 0, 0, 0, 23, 21, 1, 0, 0, 0, 24, 25, 5, 0, 0, 1, 25, 1, 1, 0, 0,
-    0, 26, 30, 3, 4, 2, 0, 27, 30, 3, 6, 3, 0, 28, 30, 3, 8, 4, 0, 29, 26, 1, 0,
-    0, 0, 29, 27, 1, 0, 0, 0, 29, 28, 1, 0, 0, 0, 30, 3, 1, 0, 0, 0, 31, 32, 5,
-    1, 0, 0, 32, 33, 5, 11, 0, 0, 33, 34, 5, 2, 0, 0, 34, 35, 3, 10, 5, 0, 35,
-    36, 5, 3, 0, 0, 36, 5, 1, 0, 0, 0, 37, 38, 5, 11, 0, 0, 38, 39, 5, 2, 0, 0,
-    39, 40, 3, 10, 5, 0, 40, 41, 5, 3, 0, 0, 41, 7, 1, 0, 0, 0, 42, 43, 3, 10,
-    5, 0, 43, 44, 5, 3, 0, 0, 44, 9, 1, 0, 0, 0, 45, 46, 3, 12, 6, 0, 46, 11, 1,
-    0, 0, 0, 47, 52, 3, 14, 7, 0, 48, 49, 7, 0, 0, 0, 49, 51, 3, 14, 7, 0, 50,
-    48, 1, 0, 0, 0, 51, 54, 1, 0, 0, 0, 52, 50, 1, 0, 0, 0, 52, 53, 1, 0, 0, 0,
-    53, 13, 1, 0, 0, 0, 54, 52, 1, 0, 0, 0, 55, 60, 3, 16, 8, 0, 56, 57, 7, 1,
-    0, 0, 57, 59, 3, 16, 8, 0, 58, 56, 1, 0, 0, 0, 59, 62, 1, 0, 0, 0, 60, 58,
-    1, 0, 0, 0, 60, 61, 1, 0, 0, 0, 61, 15, 1, 0, 0, 0, 62, 60, 1, 0, 0, 0, 63,
-    70, 5, 10, 0, 0, 64, 70, 5, 11, 0, 0, 65, 66, 5, 4, 0, 0, 66, 67, 3, 10, 5,
-    0, 67, 68, 5, 5, 0, 0, 68, 70, 1, 0, 0, 0, 69, 63, 1, 0, 0, 0, 69, 64, 1, 0,
-    0, 0, 69, 65, 1, 0, 0, 0, 70, 17, 1, 0, 0, 0, 5, 21, 29, 52, 60, 69,
+    4, 1, 8, 27, 2, 0, 7, 0, 2, 1, 7, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 3, 1, 14, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 22,
+    8, 1, 10, 1, 12, 1, 25, 9, 1, 1, 1, 0, 1, 2, 2, 0, 2, 0, 2, 1, 0, 4, 5, 1,
+    0, 2, 3, 27, 0, 4, 1, 0, 0, 0, 2, 13, 1, 0, 0, 0, 4, 5, 3, 2, 1, 0, 5, 6, 5,
+    0, 0, 1, 6, 1, 1, 0, 0, 0, 7, 8, 6, 1, -1, 0, 8, 9, 5, 6, 0, 0, 9, 10, 3, 2,
+    1, 0, 10, 11, 5, 7, 0, 0, 11, 14, 1, 0, 0, 0, 12, 14, 5, 1, 0, 0, 13, 7, 1,
+    0, 0, 0, 13, 12, 1, 0, 0, 0, 14, 23, 1, 0, 0, 0, 15, 16, 10, 4, 0, 0, 16,
+    17, 7, 0, 0, 0, 17, 22, 3, 2, 1, 5, 18, 19, 10, 3, 0, 0, 19, 20, 7, 1, 0, 0,
+    20, 22, 3, 2, 1, 4, 21, 15, 1, 0, 0, 0, 21, 18, 1, 0, 0, 0, 22, 25, 1, 0, 0,
+    0, 23, 21, 1, 0, 0, 0, 23, 24, 1, 0, 0, 0, 24, 3, 1, 0, 0, 0, 25, 23, 1, 0,
+    0, 0, 3, 13, 21, 23,
   ];
 
   private static __ATN: antlr.ATN;
@@ -508,17 +336,11 @@ export class ProgramContext extends antlr.ParserRuleContext {
   ) {
     super(parent, invokingState);
   }
+  public expr(): ExprContext {
+    return this.getRuleContext(0, ExprContext)!;
+  }
   public EOF(): antlr.TerminalNode {
     return this.getToken(StrictDomainLangParser.EOF, 0)!;
-  }
-  public statement(): StatementContext[];
-  public statement(i: number): StatementContext | null;
-  public statement(i?: number): StatementContext[] | StatementContext | null {
-    if (i === undefined) {
-      return this.getRuleContexts(StatementContext);
-    }
-
-    return this.getRuleContext(i, StatementContext);
   }
   public override get ruleIndex(): number {
     return StrictDomainLangParser.RULE_program;
@@ -535,301 +357,125 @@ export class ProgramContext extends antlr.ParserRuleContext {
   }
 }
 
-export class StatementContext extends antlr.ParserRuleContext {
+export class ExprContext extends antlr.ParserRuleContext {
   public constructor(
     parent: antlr.ParserRuleContext | null,
     invokingState: number,
   ) {
     super(parent, invokingState);
   }
-  public variableDeclaration(): VariableDeclarationContext | null {
-    return this.getRuleContext(0, VariableDeclarationContext);
-  }
-  public assignmentStatement(): AssignmentStatementContext | null {
-    return this.getRuleContext(0, AssignmentStatementContext);
-  }
-  public expressionStatement(): ExpressionStatementContext | null {
-    return this.getRuleContext(0, ExpressionStatementContext);
-  }
   public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_statement;
+    return StrictDomainLangParser.RULE_expr;
+  }
+  public override copyFrom(ctx: ExprContext): void {
+    super.copyFrom(ctx);
+  }
+}
+export class ParensContext extends ExprContext {
+  public constructor(ctx: ExprContext) {
+    super(ctx.parent, ctx.invokingState);
+    super.copyFrom(ctx);
+  }
+  public LPAREN(): antlr.TerminalNode {
+    return this.getToken(StrictDomainLangParser.LPAREN, 0)!;
+  }
+  public expr(): ExprContext {
+    return this.getRuleContext(0, ExprContext)!;
+  }
+  public RPAREN(): antlr.TerminalNode {
+    return this.getToken(StrictDomainLangParser.RPAREN, 0)!;
   }
   public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterStatement) {
-      listener.enterStatement(this);
+    if (listener.enterParens) {
+      listener.enterParens(this);
     }
   }
   public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitStatement) {
-      listener.exitStatement(this);
+    if (listener.exitParens) {
+      listener.exitParens(this);
     }
   }
 }
-
-export class VariableDeclarationContext extends antlr.ParserRuleContext {
-  public constructor(
-    parent: antlr.ParserRuleContext | null,
-    invokingState: number,
-  ) {
-    super(parent, invokingState);
+export class IntContext extends ExprContext {
+  public constructor(ctx: ExprContext) {
+    super(ctx.parent, ctx.invokingState);
+    super.copyFrom(ctx);
   }
-  public LET(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.LET, 0)!;
-  }
-  public IDENTIFIER(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.IDENTIFIER, 0)!;
-  }
-  public ASSIGN(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.ASSIGN, 0)!;
-  }
-  public expression(): ExpressionContext {
-    return this.getRuleContext(0, ExpressionContext)!;
-  }
-  public SEMI(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.SEMI, 0)!;
-  }
-  public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_variableDeclaration;
+  public INT(): antlr.TerminalNode {
+    return this.getToken(StrictDomainLangParser.INT, 0)!;
   }
   public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterVariableDeclaration) {
-      listener.enterVariableDeclaration(this);
+    if (listener.enterInt) {
+      listener.enterInt(this);
     }
   }
   public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitVariableDeclaration) {
-      listener.exitVariableDeclaration(this);
+    if (listener.exitInt) {
+      listener.exitInt(this);
     }
   }
 }
-
-export class AssignmentStatementContext extends antlr.ParserRuleContext {
-  public constructor(
-    parent: antlr.ParserRuleContext | null,
-    invokingState: number,
-  ) {
-    super(parent, invokingState);
+export class MulDivContext extends ExprContext {
+  public _op?: Token | null;
+  public constructor(ctx: ExprContext) {
+    super(ctx.parent, ctx.invokingState);
+    super.copyFrom(ctx);
   }
-  public IDENTIFIER(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.IDENTIFIER, 0)!;
-  }
-  public ASSIGN(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.ASSIGN, 0)!;
-  }
-  public expression(): ExpressionContext {
-    return this.getRuleContext(0, ExpressionContext)!;
-  }
-  public SEMI(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.SEMI, 0)!;
-  }
-  public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_assignmentStatement;
-  }
-  public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterAssignmentStatement) {
-      listener.enterAssignmentStatement(this);
-    }
-  }
-  public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitAssignmentStatement) {
-      listener.exitAssignmentStatement(this);
-    }
-  }
-}
-
-export class ExpressionStatementContext extends antlr.ParserRuleContext {
-  public constructor(
-    parent: antlr.ParserRuleContext | null,
-    invokingState: number,
-  ) {
-    super(parent, invokingState);
-  }
-  public expression(): ExpressionContext {
-    return this.getRuleContext(0, ExpressionContext)!;
-  }
-  public SEMI(): antlr.TerminalNode {
-    return this.getToken(StrictDomainLangParser.SEMI, 0)!;
-  }
-  public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_expressionStatement;
-  }
-  public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterExpressionStatement) {
-      listener.enterExpressionStatement(this);
-    }
-  }
-  public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitExpressionStatement) {
-      listener.exitExpressionStatement(this);
-    }
-  }
-}
-
-export class ExpressionContext extends antlr.ParserRuleContext {
-  public constructor(
-    parent: antlr.ParserRuleContext | null,
-    invokingState: number,
-  ) {
-    super(parent, invokingState);
-  }
-  public additiveExpression(): AdditiveExpressionContext {
-    return this.getRuleContext(0, AdditiveExpressionContext)!;
-  }
-  public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_expression;
-  }
-  public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterExpression) {
-      listener.enterExpression(this);
-    }
-  }
-  public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitExpression) {
-      listener.exitExpression(this);
-    }
-  }
-}
-
-export class AdditiveExpressionContext extends antlr.ParserRuleContext {
-  public constructor(
-    parent: antlr.ParserRuleContext | null,
-    invokingState: number,
-  ) {
-    super(parent, invokingState);
-  }
-  public multiplicativeExpression(): MultiplicativeExpressionContext[];
-  public multiplicativeExpression(
-    i: number,
-  ): MultiplicativeExpressionContext | null;
-  public multiplicativeExpression(
-    i?: number,
-  ):
-    | MultiplicativeExpressionContext[]
-    | MultiplicativeExpressionContext
-    | null {
+  public expr(): ExprContext[];
+  public expr(i: number): ExprContext | null;
+  public expr(i?: number): ExprContext[] | ExprContext | null {
     if (i === undefined) {
-      return this.getRuleContexts(MultiplicativeExpressionContext);
+      return this.getRuleContexts(ExprContext);
     }
 
-    return this.getRuleContext(i, MultiplicativeExpressionContext);
+    return this.getRuleContext(i, ExprContext);
   }
-  public PLUS(): antlr.TerminalNode[];
-  public PLUS(i: number): antlr.TerminalNode | null;
-  public PLUS(i?: number): antlr.TerminalNode | null | antlr.TerminalNode[] {
-    if (i === undefined) {
-      return this.getTokens(StrictDomainLangParser.PLUS);
-    } else {
-      return this.getToken(StrictDomainLangParser.PLUS, i);
-    }
+  public MUL(): antlr.TerminalNode | null {
+    return this.getToken(StrictDomainLangParser.MUL, 0);
   }
-  public MINUS(): antlr.TerminalNode[];
-  public MINUS(i: number): antlr.TerminalNode | null;
-  public MINUS(i?: number): antlr.TerminalNode | null | antlr.TerminalNode[] {
-    if (i === undefined) {
-      return this.getTokens(StrictDomainLangParser.MINUS);
-    } else {
-      return this.getToken(StrictDomainLangParser.MINUS, i);
-    }
-  }
-  public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_additiveExpression;
+  public DIV(): antlr.TerminalNode | null {
+    return this.getToken(StrictDomainLangParser.DIV, 0);
   }
   public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterAdditiveExpression) {
-      listener.enterAdditiveExpression(this);
+    if (listener.enterMulDiv) {
+      listener.enterMulDiv(this);
     }
   }
   public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitAdditiveExpression) {
-      listener.exitAdditiveExpression(this);
+    if (listener.exitMulDiv) {
+      listener.exitMulDiv(this);
     }
   }
 }
-
-export class MultiplicativeExpressionContext extends antlr.ParserRuleContext {
-  public constructor(
-    parent: antlr.ParserRuleContext | null,
-    invokingState: number,
-  ) {
-    super(parent, invokingState);
+export class AddSubContext extends ExprContext {
+  public _op?: Token | null;
+  public constructor(ctx: ExprContext) {
+    super(ctx.parent, ctx.invokingState);
+    super.copyFrom(ctx);
   }
-  public primaryExpression(): PrimaryExpressionContext[];
-  public primaryExpression(i: number): PrimaryExpressionContext | null;
-  public primaryExpression(
-    i?: number,
-  ): PrimaryExpressionContext[] | PrimaryExpressionContext | null {
+  public expr(): ExprContext[];
+  public expr(i: number): ExprContext | null;
+  public expr(i?: number): ExprContext[] | ExprContext | null {
     if (i === undefined) {
-      return this.getRuleContexts(PrimaryExpressionContext);
+      return this.getRuleContexts(ExprContext);
     }
 
-    return this.getRuleContext(i, PrimaryExpressionContext);
+    return this.getRuleContext(i, ExprContext);
   }
-  public STAR(): antlr.TerminalNode[];
-  public STAR(i: number): antlr.TerminalNode | null;
-  public STAR(i?: number): antlr.TerminalNode | null | antlr.TerminalNode[] {
-    if (i === undefined) {
-      return this.getTokens(StrictDomainLangParser.STAR);
-    } else {
-      return this.getToken(StrictDomainLangParser.STAR, i);
-    }
+  public PLUS(): antlr.TerminalNode | null {
+    return this.getToken(StrictDomainLangParser.PLUS, 0);
   }
-  public SLASH(): antlr.TerminalNode[];
-  public SLASH(i: number): antlr.TerminalNode | null;
-  public SLASH(i?: number): antlr.TerminalNode | null | antlr.TerminalNode[] {
-    if (i === undefined) {
-      return this.getTokens(StrictDomainLangParser.SLASH);
-    } else {
-      return this.getToken(StrictDomainLangParser.SLASH, i);
-    }
-  }
-  public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_multiplicativeExpression;
+  public MINUS(): antlr.TerminalNode | null {
+    return this.getToken(StrictDomainLangParser.MINUS, 0);
   }
   public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterMultiplicativeExpression) {
-      listener.enterMultiplicativeExpression(this);
+    if (listener.enterAddSub) {
+      listener.enterAddSub(this);
     }
   }
   public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitMultiplicativeExpression) {
-      listener.exitMultiplicativeExpression(this);
-    }
-  }
-}
-
-export class PrimaryExpressionContext extends antlr.ParserRuleContext {
-  public constructor(
-    parent: antlr.ParserRuleContext | null,
-    invokingState: number,
-  ) {
-    super(parent, invokingState);
-  }
-  public NUMBER(): antlr.TerminalNode | null {
-    return this.getToken(StrictDomainLangParser.NUMBER, 0);
-  }
-  public IDENTIFIER(): antlr.TerminalNode | null {
-    return this.getToken(StrictDomainLangParser.IDENTIFIER, 0);
-  }
-  public LPAREN(): antlr.TerminalNode | null {
-    return this.getToken(StrictDomainLangParser.LPAREN, 0);
-  }
-  public expression(): ExpressionContext | null {
-    return this.getRuleContext(0, ExpressionContext);
-  }
-  public RPAREN(): antlr.TerminalNode | null {
-    return this.getToken(StrictDomainLangParser.RPAREN, 0);
-  }
-  public override get ruleIndex(): number {
-    return StrictDomainLangParser.RULE_primaryExpression;
-  }
-  public override enterRule(listener: StrictDomainLangParserListener): void {
-    if (listener.enterPrimaryExpression) {
-      listener.enterPrimaryExpression(this);
-    }
-  }
-  public override exitRule(listener: StrictDomainLangParserListener): void {
-    if (listener.exitPrimaryExpression) {
-      listener.exitPrimaryExpression(this);
+    if (listener.exitAddSub) {
+      listener.exitAddSub(this);
     }
   }
 }

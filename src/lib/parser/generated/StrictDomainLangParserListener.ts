@@ -6,14 +6,10 @@ import {
 } from "antlr4ng";
 
 import { ProgramContext } from "./StrictDomainLangParser.js";
-import { StatementContext } from "./StrictDomainLangParser.js";
-import { VariableDeclarationContext } from "./StrictDomainLangParser.js";
-import { AssignmentStatementContext } from "./StrictDomainLangParser.js";
-import { ExpressionStatementContext } from "./StrictDomainLangParser.js";
-import { ExpressionContext } from "./StrictDomainLangParser.js";
-import { AdditiveExpressionContext } from "./StrictDomainLangParser.js";
-import { MultiplicativeExpressionContext } from "./StrictDomainLangParser.js";
-import { PrimaryExpressionContext } from "./StrictDomainLangParser.js";
+import { ParensContext } from "./StrictDomainLangParser.js";
+import { IntContext } from "./StrictDomainLangParser.js";
+import { MulDivContext } from "./StrictDomainLangParser.js";
+import { AddSubContext } from "./StrictDomainLangParser.js";
 
 /**
  * This interface defines a complete listener for a parse tree produced by
@@ -31,87 +27,53 @@ export class StrictDomainLangParserListener implements ParseTreeListener {
    */
   exitProgram?: (ctx: ProgramContext) => void;
   /**
-   * Enter a parse tree produced by `StrictDomainLangParser.statement`.
+   * Enter a parse tree produced by the `Parens`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  enterStatement?: (ctx: StatementContext) => void;
+  enterParens?: (ctx: ParensContext) => void;
   /**
-   * Exit a parse tree produced by `StrictDomainLangParser.statement`.
+   * Exit a parse tree produced by the `Parens`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  exitStatement?: (ctx: StatementContext) => void;
+  exitParens?: (ctx: ParensContext) => void;
   /**
-   * Enter a parse tree produced by `StrictDomainLangParser.variableDeclaration`.
+   * Enter a parse tree produced by the `Int`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  enterVariableDeclaration?: (ctx: VariableDeclarationContext) => void;
+  enterInt?: (ctx: IntContext) => void;
   /**
-   * Exit a parse tree produced by `StrictDomainLangParser.variableDeclaration`.
+   * Exit a parse tree produced by the `Int`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  exitVariableDeclaration?: (ctx: VariableDeclarationContext) => void;
+  exitInt?: (ctx: IntContext) => void;
   /**
-   * Enter a parse tree produced by `StrictDomainLangParser.assignmentStatement`.
+   * Enter a parse tree produced by the `MulDiv`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  enterAssignmentStatement?: (ctx: AssignmentStatementContext) => void;
+  enterMulDiv?: (ctx: MulDivContext) => void;
   /**
-   * Exit a parse tree produced by `StrictDomainLangParser.assignmentStatement`.
+   * Exit a parse tree produced by the `MulDiv`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  exitAssignmentStatement?: (ctx: AssignmentStatementContext) => void;
+  exitMulDiv?: (ctx: MulDivContext) => void;
   /**
-   * Enter a parse tree produced by `StrictDomainLangParser.expressionStatement`.
+   * Enter a parse tree produced by the `AddSub`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  enterExpressionStatement?: (ctx: ExpressionStatementContext) => void;
+  enterAddSub?: (ctx: AddSubContext) => void;
   /**
-   * Exit a parse tree produced by `StrictDomainLangParser.expressionStatement`.
+   * Exit a parse tree produced by the `AddSub`
+   * labeled alternative in `StrictDomainLangParser.expr`.
    * @param ctx the parse tree
    */
-  exitExpressionStatement?: (ctx: ExpressionStatementContext) => void;
-  /**
-   * Enter a parse tree produced by `StrictDomainLangParser.expression`.
-   * @param ctx the parse tree
-   */
-  enterExpression?: (ctx: ExpressionContext) => void;
-  /**
-   * Exit a parse tree produced by `StrictDomainLangParser.expression`.
-   * @param ctx the parse tree
-   */
-  exitExpression?: (ctx: ExpressionContext) => void;
-  /**
-   * Enter a parse tree produced by `StrictDomainLangParser.additiveExpression`.
-   * @param ctx the parse tree
-   */
-  enterAdditiveExpression?: (ctx: AdditiveExpressionContext) => void;
-  /**
-   * Exit a parse tree produced by `StrictDomainLangParser.additiveExpression`.
-   * @param ctx the parse tree
-   */
-  exitAdditiveExpression?: (ctx: AdditiveExpressionContext) => void;
-  /**
-   * Enter a parse tree produced by `StrictDomainLangParser.multiplicativeExpression`.
-   * @param ctx the parse tree
-   */
-  enterMultiplicativeExpression?: (
-    ctx: MultiplicativeExpressionContext,
-  ) => void;
-  /**
-   * Exit a parse tree produced by `StrictDomainLangParser.multiplicativeExpression`.
-   * @param ctx the parse tree
-   */
-  exitMultiplicativeExpression?: (ctx: MultiplicativeExpressionContext) => void;
-  /**
-   * Enter a parse tree produced by `StrictDomainLangParser.primaryExpression`.
-   * @param ctx the parse tree
-   */
-  enterPrimaryExpression?: (ctx: PrimaryExpressionContext) => void;
-  /**
-   * Exit a parse tree produced by `StrictDomainLangParser.primaryExpression`.
-   * @param ctx the parse tree
-   */
-  exitPrimaryExpression?: (ctx: PrimaryExpressionContext) => void;
+  exitAddSub?: (ctx: AddSubContext) => void;
 
   visitTerminal(node: TerminalNode): void {}
   visitErrorNode(node: ErrorNode): void {}
