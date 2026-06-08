@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "dev": "tsc src/index.ts",
+    "generate:parser": "antlr-ng -Dlanguage=TypeScript -o src/parser/generated grammar/StrictDomainLangLexer.g4 grammar/StrictDomainLangParser.g4",
     "build": "tsup src/index.ts --format esm --dts --clean",
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit",
@@ -18,12 +19,14 @@
     "lint": "eslint src/**/*.ts && prettier --check src/**/*.ts && npm run typecheck"
   },
   "dependencies": {
+    "antlr4ng": "^3.0.16",
     "commander": "^15.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.2",
     "@typescript-eslint/parser": "^8.60.1",
+    "antlr-ng": "^1.0.10",
     "eslint": "^10.4.1",
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
