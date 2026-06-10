@@ -4,18 +4,29 @@ import { ProgramNode } from "../ast/nodes/program.js";
 import { IntValue } from "./runtimeValue/numberValue.js";
 import { BinaryNode } from "../ast/nodes/binary.js";
 import { IntNode } from "../ast/nodes/int.js";
+import { CallNode } from "../ast/nodes/call.js";
+
+type Func = (args: RuntimeValue[]) => RuntimeValue;
 
 export class BoqqiInterpreter implements Visitor<RuntimeValue> {
-  private readonly output: (text: string) => void; // 出力機
+  private funcs: Map<string, Func>; // 関数表
+  private readonly output: (text: string) => void; // 出力先
 
   constructor(private readonly outputDevice: (text: string) => void) {
     this.output = outputDevice;
+    this.funcs = new Map<string, Func>();
+    // 組み込み関数
+    this.funcs.set("print", (args: RuntimeValue[]) => {
+      for (const arg of args) {
+        this.output(`${String(arg.value)}\n`);
+      }
+      return new IntValue(0); // 正常動作として 0 を返す
+    });
   }
-
+  // ビジター
   visitProgram(node: ProgramNode): RuntimeValue {
     for (const child of node.body) {
       const expr = child.accept(this);
-      this.output(`${String(expr.value)}\n`);
     }
     return new IntValue(0); // 正常動作として 0 を返す
   }
@@ -43,5 +54,18 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
       );
     }
     return new IntValue(value);
+  }
+  visitCall(node: CallNode): RuntimeValue {
+    const func = this.funcs.get(node.name);
+    if (func === undefined) {
+      throw new Error(`関数 ${node.name} は未定義です`);
+    }
+    // 引数解釈
+    const args: RuntimeValue[] = [];
+    for (const child of node.args) {
+      args.push(child.accept(this));
+    }
+    // 実行
+    return func(args);
   }
 }
