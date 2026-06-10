@@ -5,22 +5,17 @@ import { IntValue } from "./runtimeValue/numberValue.js";
 import { BinaryNode } from "../ast/nodes/binary.js";
 import { IntNode } from "../ast/nodes/int.js";
 
-export interface OutputDevice {
-  write(text: string): void;
-}
-
 export class BoqqiInterpreter implements Visitor<RuntimeValue> {
-  constructor(private readonly outputDevice: OutputDevice) {}
+  private readonly output: (text: string) => void; // 出力機
 
-  // 出力機能
-  out(value: RuntimeValue): void {
-    this.outputDevice.write(`${String(value.value)}\n`);
+  constructor(private readonly outputDevice: (text: string) => void) {
+    this.output = outputDevice;
   }
 
   visitProgram(node: ProgramNode): RuntimeValue {
-    const value = node.body.accept(this);
-    this.out(value);
-    return value;
+    const res = node.body.accept(this);
+    this.output(`${String(res.value)}\n`);
+    return res;
   }
   visitBinary(node: BinaryNode): RuntimeValue {
     const left = node.left.accept(this);

@@ -11,10 +11,8 @@ export function createRunCommand(): Command {
     .action(async (file: string) => {
       const source = await readFile(file, "utf-8");
       const ast = parseToAst(source);
-      const interpreter = new BoqqiInterpreter({
-        write(text: string): void {
-          process.stdout.write(text);
-        },
+      const interpreter = new BoqqiInterpreter((txt: string) => {
+        process.stdout.write(txt);
       });
       interpreter.visitProgram(ast);
     });
