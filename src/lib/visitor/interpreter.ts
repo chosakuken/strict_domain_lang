@@ -26,7 +26,7 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   // ビジター
   visitProgram(node: ProgramNode): RuntimeValue {
     for (const child of node.body) {
-      const expr = child.accept(this);
+      child.accept(this);
     }
     return new IntValue(0); // 正常動作として 0 を返す
   }
