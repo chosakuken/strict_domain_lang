@@ -1,6 +1,6 @@
 import { CharStream, CommonTokenStream, Token } from "antlr4ng";
 
-import { StrictDomainLangLexer } from "../parser/generated/StrictDomainLangLexer.js";
+import { BoQQILexer } from "../parser/generated/BoQQILexer.js";
 
 export interface TokenInfo {
   readonly type: number;
@@ -11,7 +11,7 @@ export interface TokenInfo {
 }
 
 export function tokenize(source: string): TokenInfo[] {
-  const lexer = new StrictDomainLangLexer(CharStream.fromString(source));
+  const lexer = new BoQQILexer(CharStream.fromString(source));
   const tokenStream = new CommonTokenStream(lexer);
 
   tokenStream.fill();

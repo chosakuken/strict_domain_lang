@@ -1,4 +1,4 @@
-lexer grammar StrictDomainLangLexer;
+lexer grammar BoQQILexer;
 
 INT : [0-9]+ ;
 

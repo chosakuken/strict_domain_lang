@@ -9,8 +9,8 @@ export function createCli(): Command {
   const program = new Command();
 
   program
-    .name("sdl")
-    .description("Strict Domain Language command line tool")
+    .name("boqqi")
+    .description("Bounded Qualified Query Interpreter")
     .version("0.0.0")
     .action(() => {
       program.help();
