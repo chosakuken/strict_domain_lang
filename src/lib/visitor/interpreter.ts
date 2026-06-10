@@ -13,9 +13,11 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   }
 
   visitProgram(node: ProgramNode): RuntimeValue {
-    const res = node.body.accept(this);
-    this.output(`${String(res.value)}\n`);
-    return res;
+    for (const child of node.body) {
+      const expr = child.accept(this);
+      this.output(`${String(expr.value)}\n`);
+    }
+    return new IntValue(0); // 正常動作として 0 を返す
   }
   visitBinary(node: BinaryNode): RuntimeValue {
     const left = node.left.accept(this);

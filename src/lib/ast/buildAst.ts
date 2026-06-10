@@ -12,7 +12,7 @@ import { IntNode } from "./nodes/int.js";
 import { ProgramNode } from "./nodes/program.js";
 
 export function buildProgramAst(ctx: ProgramContext): ProgramNode {
-  return new ProgramNode(buildExprAst(ctx.expr()));
+  return new ProgramNode(ctx.expr().map(buildExprAst));
 }
 
 export function buildExprAst(ctx: ExprContext): ExprNode {

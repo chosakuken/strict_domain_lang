@@ -49,12 +49,25 @@ export class BoQQIParser extends antlr.Parser {
     public program(): ProgramContext {
         let localContext = new ProgramContext(this.context, this.state);
         this.enterRule(localContext, 0, BoQQIParser.RULE_program);
+        let _la: number;
         try {
             this.enterOuterAlt(localContext, 1);
             {
-            this.state = 4;
-            this.expr(0);
-            this.state = 5;
+            this.state = 7;
+            this.errorHandler.sync(this);
+            _la = this.tokenStream.LA(1);
+            while (_la === 1 || _la === 6) {
+                {
+                {
+                this.state = 4;
+                this.expr(0);
+                }
+                }
+                this.state = 9;
+                this.errorHandler.sync(this);
+                _la = this.tokenStream.LA(1);
+            }
+            this.state = 10;
             this.match(BoQQIParser.EOF);
             }
         }
@@ -90,7 +103,7 @@ export class BoQQIParser extends antlr.Parser {
             let alternative: number;
             this.enterOuterAlt(localContext, 1);
             {
-            this.state = 13;
+            this.state = 18;
             this.errorHandler.sync(this);
             switch (this.tokenStream.LA(1)) {
             case BoQQIParser.LPAREN:
@@ -99,11 +112,11 @@ export class BoQQIParser extends antlr.Parser {
                 this.context = localContext;
                 previousContext = localContext;
 
-                this.state = 8;
+                this.state = 13;
                 this.match(BoQQIParser.LPAREN);
-                this.state = 9;
+                this.state = 14;
                 this.expr(0);
-                this.state = 10;
+                this.state = 15;
                 this.match(BoQQIParser.RPAREN);
                 }
                 break;
@@ -112,7 +125,7 @@ export class BoQQIParser extends antlr.Parser {
                 localContext = new IntContext(localContext);
                 this.context = localContext;
                 previousContext = localContext;
-                this.state = 12;
+                this.state = 17;
                 this.match(BoQQIParser.INT);
                 }
                 break;
@@ -120,9 +133,9 @@ export class BoQQIParser extends antlr.Parser {
                 throw new antlr.NoViableAltException(this);
             }
             this.context!.stop = this.tokenStream.LT(-1);
-            this.state = 23;
+            this.state = 28;
             this.errorHandler.sync(this);
-            alternative = this.interpreter.adaptivePredict(this.tokenStream, 2, this.context);
+            alternative = this.interpreter.adaptivePredict(this.tokenStream, 3, this.context);
             while (alternative !== 2 && alternative !== antlr.ATN.INVALID_ALT_NUMBER) {
                 if (alternative === 1) {
                     if (this.parseListeners != null) {
@@ -130,18 +143,18 @@ export class BoQQIParser extends antlr.Parser {
                     }
                     previousContext = localContext;
                     {
-                    this.state = 21;
+                    this.state = 26;
                     this.errorHandler.sync(this);
-                    switch (this.interpreter.adaptivePredict(this.tokenStream, 1, this.context) ) {
+                    switch (this.interpreter.adaptivePredict(this.tokenStream, 2, this.context) ) {
                     case 1:
                         {
                         localContext = new MulDivContext(new ExprContext(parentContext, parentState));
                         this.pushNewRecursionContext(localContext, _startState, BoQQIParser.RULE_expr);
-                        this.state = 15;
+                        this.state = 20;
                         if (!(this.precpred(this.context, 4))) {
                             throw this.createFailedPredicateException("this.precpred(this.context, 4)");
                         }
-                        this.state = 16;
+                        this.state = 21;
                         (localContext as MulDivContext)._op = this.tokenStream.LT(1);
                         _la = this.tokenStream.LA(1);
                         if(!(_la === 4 || _la === 5)) {
@@ -151,7 +164,7 @@ export class BoQQIParser extends antlr.Parser {
                             this.errorHandler.reportMatch(this);
                             this.consume();
                         }
-                        this.state = 17;
+                        this.state = 22;
                         this.expr(5);
                         }
                         break;
@@ -159,11 +172,11 @@ export class BoQQIParser extends antlr.Parser {
                         {
                         localContext = new AddSubContext(new ExprContext(parentContext, parentState));
                         this.pushNewRecursionContext(localContext, _startState, BoQQIParser.RULE_expr);
-                        this.state = 18;
+                        this.state = 23;
                         if (!(this.precpred(this.context, 3))) {
                             throw this.createFailedPredicateException("this.precpred(this.context, 3)");
                         }
-                        this.state = 19;
+                        this.state = 24;
                         (localContext as AddSubContext)._op = this.tokenStream.LT(1);
                         _la = this.tokenStream.LA(1);
                         if(!(_la === 2 || _la === 3)) {
@@ -173,16 +186,16 @@ export class BoQQIParser extends antlr.Parser {
                             this.errorHandler.reportMatch(this);
                             this.consume();
                         }
-                        this.state = 20;
+                        this.state = 25;
                         this.expr(4);
                         }
                         break;
                     }
                     }
                 }
-                this.state = 25;
+                this.state = 30;
                 this.errorHandler.sync(this);
-                alternative = this.interpreter.adaptivePredict(this.tokenStream, 2, this.context);
+                alternative = this.interpreter.adaptivePredict(this.tokenStream, 3, this.context);
             }
             }
         }
@@ -218,15 +231,17 @@ export class BoQQIParser extends antlr.Parser {
     }
 
     public static readonly _serializedATN: number[] = [
-        4,1,8,27,2,0,7,0,2,1,7,1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,3,1,
-        14,8,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,22,8,1,10,1,12,1,25,9,1,1,1,0,
-        1,2,2,0,2,0,2,1,0,4,5,1,0,2,3,27,0,4,1,0,0,0,2,13,1,0,0,0,4,5,3,
-        2,1,0,5,6,5,0,0,1,6,1,1,0,0,0,7,8,6,1,-1,0,8,9,5,6,0,0,9,10,3,2,
-        1,0,10,11,5,7,0,0,11,14,1,0,0,0,12,14,5,1,0,0,13,7,1,0,0,0,13,12,
-        1,0,0,0,14,23,1,0,0,0,15,16,10,4,0,0,16,17,7,0,0,0,17,22,3,2,1,5,
-        18,19,10,3,0,0,19,20,7,1,0,0,20,22,3,2,1,4,21,15,1,0,0,0,21,18,1,
-        0,0,0,22,25,1,0,0,0,23,21,1,0,0,0,23,24,1,0,0,0,24,3,1,0,0,0,25,
-        23,1,0,0,0,3,13,21,23
+        4,1,8,32,2,0,7,0,2,1,7,1,1,0,5,0,6,8,0,10,0,12,0,9,9,0,1,0,1,0,1,
+        1,1,1,1,1,1,1,1,1,1,1,3,1,19,8,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,27,
+        8,1,10,1,12,1,30,9,1,1,1,0,1,2,2,0,2,0,2,1,0,4,5,1,0,2,3,33,0,7,
+        1,0,0,0,2,18,1,0,0,0,4,6,3,2,1,0,5,4,1,0,0,0,6,9,1,0,0,0,7,5,1,0,
+        0,0,7,8,1,0,0,0,8,10,1,0,0,0,9,7,1,0,0,0,10,11,5,0,0,1,11,1,1,0,
+        0,0,12,13,6,1,-1,0,13,14,5,6,0,0,14,15,3,2,1,0,15,16,5,7,0,0,16,
+        19,1,0,0,0,17,19,5,1,0,0,18,12,1,0,0,0,18,17,1,0,0,0,19,28,1,0,0,
+        0,20,21,10,4,0,0,21,22,7,0,0,0,22,27,3,2,1,5,23,24,10,3,0,0,24,25,
+        7,1,0,0,25,27,3,2,1,4,26,20,1,0,0,0,26,23,1,0,0,0,27,30,1,0,0,0,
+        28,26,1,0,0,0,28,29,1,0,0,0,29,3,1,0,0,0,30,28,1,0,0,0,4,7,18,26,
+        28
     ];
 
     private static __ATN: antlr.ATN;
@@ -252,11 +267,17 @@ export class ProgramContext extends antlr.ParserRuleContext {
     public constructor(parent: antlr.ParserRuleContext | null, invokingState: number) {
         super(parent, invokingState);
     }
-    public expr(): ExprContext {
-        return this.getRuleContext(0, ExprContext)!;
-    }
     public EOF(): antlr.TerminalNode {
         return this.getToken(BoQQIParser.EOF, 0)!;
+    }
+    public expr(): ExprContext[];
+    public expr(i: number): ExprContext | null;
+    public expr(i?: number): ExprContext[] | ExprContext | null {
+        if (i === undefined) {
+            return this.getRuleContexts(ExprContext);
+        }
+
+        return this.getRuleContext(i, ExprContext);
     }
     public override get ruleIndex(): number {
         return BoQQIParser.RULE_program;

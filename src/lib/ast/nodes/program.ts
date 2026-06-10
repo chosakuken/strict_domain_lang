@@ -5,11 +5,11 @@ import { AstNode } from "./node.js";
 
 export class ProgramNode implements AstNode {
   readonly kind: "program";
-  readonly body: ExprNode;
+  readonly body: ExprNode[];
   accept<T>(visitor: Visitor<T>) {
     return visitor.visitProgram(this);
   }
-  constructor(body: ExprNode) {
+  constructor(body: ExprNode[]) {
     this.kind = "program";
     this.body = body;
   }

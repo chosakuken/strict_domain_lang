@@ -5,7 +5,7 @@ options {
 }
 
 program
-    : expr EOF
+    : expr* EOF
     ;
 
 expr
