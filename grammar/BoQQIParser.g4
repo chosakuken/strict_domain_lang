@@ -5,7 +5,12 @@ options {
 }
 
 program
-    : expr* EOF
+    : statement* EOF
+    ;
+
+statement
+    : call
+    | expr
     ;
 
 expr
@@ -13,4 +18,13 @@ expr
     | expr op=(PLUS | MINUS) expr   # AddSub
     | LPAREN expr RPAREN            # Parens
     | INT                           # Int
+    ;
+
+call
+    : IDENT LPAREN args RPAREN
+    ;
+
+args
+    : expr (COMMA expr)*
+    |
     ;

@@ -1,18 +1,44 @@
 import {
   AddSubContext,
+  CallContext,
   ExprContext,
+  IdentContext,
   IntContext,
   MulDivContext,
   ParensContext,
   ProgramContext,
+  StatementContext,
 } from "../parser/generated/BoQQIParser.js";
 import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
+import { CallNode } from "./nodes/call.js";
 import type { ExprNode } from "./nodes/expr.js";
 import { IntNode } from "./nodes/int.js";
 import { ProgramNode } from "./nodes/program.js";
+import type { StatementNode } from "./nodes/statement.js";
 
 export function buildProgramAst(ctx: ProgramContext): ProgramNode {
-  return new ProgramNode(ctx.expr().map(buildExprAst));
+  return new ProgramNode(ctx.statement().map(buildStatementAst));
+}
+
+export function buildStatementAst(ctx: StatementContext): StatementNode {
+  const call = ctx.call();
+  if (call !== null) {
+    return buildCallAst(call);
+  }
+
+  const expr = ctx.expr();
+  if (expr !== null) {
+    return buildExprAst(expr);
+  }
+
+  throw new Error(`Unsupported statement context: ${ctx.getText()}`);
+}
+
+export function buildCallAst(ctx: CallContext): CallNode {
+  return new CallNode(
+    ctx.IDENT().getText(),
+    ctx.args().expr().map(buildExprAst),
+  );
 }
 
 export function buildExprAst(ctx: ExprContext): ExprNode {
@@ -22,6 +48,10 @@ export function buildExprAst(ctx: ExprContext): ExprNode {
 
   if (ctx instanceof ParensContext) {
     return buildExprAst(ctx.expr());
+  }
+
+  if (ctx instanceof IdentContext) {
+    throw new Error(`Unsupported identifier expression: ${ctx.getText()}`);
   }
 
   if (ctx instanceof AddSubContext || ctx instanceof MulDivContext) {
