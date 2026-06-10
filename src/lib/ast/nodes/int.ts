@@ -1,4 +1,4 @@
-import { Visitor } from "../../visitor/visitior.js";
+import { Visitor } from "../../visitor/visitor.js";
 import { AstNode } from "./node.js";
 
 export class IntNode implements AstNode {

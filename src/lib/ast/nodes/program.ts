@@ -1,5 +1,5 @@
 // program ノード
-import { Visitor } from "../../visitor/visitior.js";
+import { Visitor } from "../../visitor/visitor.js";
 import { ExprNode } from "./expr.js";
 import { AstNode } from "./node.js";
 

@@ -1,4 +1,4 @@
-import { Visitor } from "../../visitor/visitior.js";
+import { Visitor } from "../../visitor/visitor.js";
 
 // AST の基礎単位を定義
 export interface AstNode {
