@@ -1,5 +1,4 @@
 import { BinaryNode } from "../ast/nodes/binary.js";
-import { ExprNode } from "../ast/nodes/expr.js";
 import { IntNode } from "../ast/nodes/int.js";
 import { ProgramNode } from "../ast/nodes/program.js";
 

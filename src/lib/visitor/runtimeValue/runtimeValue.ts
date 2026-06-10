@@ -1,3 +1,3 @@
-export interface RuntimeValue {
-  readonly type: string;
-}
+import { NumberValue } from "./numberValue.js";
+
+export type RuntimeValue = NumberValue;

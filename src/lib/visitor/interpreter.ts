@@ -22,13 +22,15 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
       case "/":
         return new IntValue(left.value / right.value);
       default:
-        throw new Error(`演算子 ${node.operator} は未定義です`);
+        throw new Error(`演算子 ${String(node.operator)} は未定義です`);
     }
   }
   visitInt(node: IntNode): RuntimeValue {
     const value = node.value;
     if (!Number.isInteger(value)) {
-      throw new Error(`Int 型が期待されましたが、${value} が入力されました`);
+      throw new Error(
+        `Int 型が期待されましたが、${String(value)} が入力されました`,
+      );
     }
     return new IntValue(value);
   }

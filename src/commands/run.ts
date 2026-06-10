@@ -12,6 +12,6 @@ export function createRunCommand(): Command {
       const ast = parseToAst(source);
       const interpreter = new BoqqiInterpreter();
       const res = interpreter.visitProgram(ast);
-      process.stdout.write(`${res.value}\n`);
+      process.stdout.write(`${String(res.value)}\n`);
     });
 }

@@ -1,6 +1,9 @@
-import { RuntimeValue } from "./runtimeValue.js";
+export interface NumberValue {
+  readonly type: string;
+  readonly value: number;
+}
 
-export class IntValue implements RuntimeValue {
+export class IntValue implements NumberValue {
   readonly type: "int";
   readonly value: number;
   constructor(v: number) {
