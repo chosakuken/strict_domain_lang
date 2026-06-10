@@ -12,15 +12,18 @@ export interface ParseResult {
   readonly tree: ProgramContext;
 }
 
-export function parse(source: string): ParseTreeJson {
+export function parseToTree(source: string): ParseResult {
   const lexer = new StrictDomainLangLexer(CharStream.fromString(source));
   const tokenStream = new CommonTokenStream(lexer);
   const parser = new StrictDomainLangParser(tokenStream);
 
-  const res = {
+  return {
     parser,
     tree: parser.program(),
   };
+}
 
+export function parse(source: string): ParseTreeJson {
+  const res = parseToTree(source);
   return parseTreeToJson(res.tree, res.parser);
 }
