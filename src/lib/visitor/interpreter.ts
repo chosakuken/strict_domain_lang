@@ -6,8 +6,16 @@ import { BinaryNode } from "../ast/nodes/binary.js";
 import { IntNode } from "../ast/nodes/int.js";
 
 export class BoqqiInterpreter implements Visitor<RuntimeValue> {
+  private readonly output: (text: string) => void; // 出力機
+
+  constructor(private readonly outputDevice: (text: string) => void) {
+    this.output = outputDevice;
+  }
+
   visitProgram(node: ProgramNode): RuntimeValue {
-    return node.body.accept(this);
+    const res = node.body.accept(this);
+    this.output(`${String(res.value)}\n`);
+    return res;
   }
   visitBinary(node: BinaryNode): RuntimeValue {
     const left = node.left.accept(this);
