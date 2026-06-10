@@ -1,15 +1,15 @@
 // program ノード
 import { Visitor } from "../../visitor/visitor.js";
-import { ExprNode } from "./expr.js";
 import { AstNode } from "./node.js";
+import { StatementNode } from "./statement.js";
 
 export class ProgramNode implements AstNode {
   readonly kind: "program";
-  readonly body: ExprNode[];
+  readonly body: StatementNode[];
   accept<T>(visitor: Visitor<T>) {
     return visitor.visitProgram(this);
   }
-  constructor(body: ExprNode[]) {
+  constructor(body: StatementNode[]) {
     this.kind = "program";
     this.body = body;
   }
