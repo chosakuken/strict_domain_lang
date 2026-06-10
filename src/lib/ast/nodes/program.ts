@@ -6,7 +6,7 @@ import { AstNode } from "./node.js";
 export class ProgramNode implements AstNode {
   readonly kind: "program";
   readonly body: ExprNode;
-  accept(visitor: Visitor) {
+  accept<T>(visitor: Visitor<T>) {
     return visitor.visitProgram(this);
   }
   constructor(body: ExprNode) {

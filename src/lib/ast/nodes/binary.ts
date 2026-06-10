@@ -9,7 +9,7 @@ export class BinaryNode implements AstNode {
   readonly operator: BinaryOperator;
   readonly left: ExprNode;
   readonly right: ExprNode;
-  accept(visitor: Visitor) {
+  accept<T>(visitor: Visitor<T>) {
     return visitor.visitBinary(this);
   }
   constructor(operator: BinaryOperator, left: ExprNode, right: ExprNode) {

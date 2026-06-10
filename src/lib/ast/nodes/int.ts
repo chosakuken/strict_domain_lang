@@ -4,7 +4,7 @@ import { AstNode } from "./node.js";
 export class IntNode implements AstNode {
   readonly kind: "int";
   readonly value: number;
-  accept(visitor: Visitor) {
+  accept<T>(visitor: Visitor<T>) {
     return visitor.visitInt(this);
   }
   constructor(value: number) {
