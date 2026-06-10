@@ -1,17 +1,17 @@
 {
-  "name": "strict-domain-lang",
+  "name": "boqqi",
   "version": "0.0.0",
-  "description": "厳格な定義域を設けた言語処理系",
+  "description": "Bounded Qualified Query Interpreter",
   "type": "module",
   "bin": {
-    "sdl": "./dist/index.js"
+    "boqqi": "./dist/index.js"
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "tsc src/index.ts",
-    "gen:parser": "antlr-ng -Dlanguage=TypeScript -o src/lib/parser/generated grammar/StrictDomainLangLexer.g4 grammar/StrictDomainLangParser.g4",
+    "gen:parser": "antlr-ng -Dlanguage=TypeScript -o src/lib/parser/generated grammar/BoQQILexer.g4 grammar/BoQQIParser.g4",
     "build": "tsup src/index.ts --format esm --dts --clean",
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit",

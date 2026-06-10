@@ -1,21 +1,18 @@
 import { CharStream, CommonTokenStream } from "antlr4ng";
 
-import { StrictDomainLangLexer } from "./generated/StrictDomainLangLexer.js";
-import {
-  ProgramContext,
-  StrictDomainLangParser,
-} from "./generated/StrictDomainLangParser.js";
+import { BoQQILexer } from "./generated/BoQQILexer.js";
+import { BoQQIParser, ProgramContext } from "./generated/BoQQIParser.js";
 import { ParseTreeJson, parseTreeToJson } from "./treeToJson.js";
 
 export interface ParseResult {
-  readonly parser: StrictDomainLangParser;
+  readonly parser: BoQQIParser;
   readonly tree: ProgramContext;
 }
 
 export function parseToTree(source: string): ParseResult {
-  const lexer = new StrictDomainLangLexer(CharStream.fromString(source));
+  const lexer = new BoQQILexer(CharStream.fromString(source));
   const tokenStream = new CommonTokenStream(lexer);
-  const parser = new StrictDomainLangParser(tokenStream);
+  const parser = new BoQQIParser(tokenStream);
 
   return {
     parser,

@@ -5,7 +5,7 @@ import {
   MulDivContext,
   ParensContext,
   ProgramContext,
-} from "../parser/generated/StrictDomainLangParser.js";
+} from "../parser/generated/BoQQIParser.js";
 import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
 import type { ExprNode } from "./nodes/expr.js";
 import { IntNode } from "./nodes/int.js";

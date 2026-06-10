@@ -1,7 +1,7 @@
-parser grammar StrictDomainLangParser;
+parser grammar BoQQIParser;
 
 options {
-    tokenVocab = StrictDomainLangLexer;
+    tokenVocab = BoQQILexer;
 }
 
 program
