@@ -1,2 +1,4 @@
 node_modules/
 dist/
+# 生成物を無視
+out/
