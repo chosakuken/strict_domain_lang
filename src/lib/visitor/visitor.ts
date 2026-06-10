@@ -6,7 +6,6 @@ import { ProgramNode } from "../ast/nodes/program.js";
 // visitor の 雛形を明記
 export interface Visitor<T> {
   visitProgram(node: ProgramNode): T;
-  visitExpr(node: ExprNode): T;
   visitBinary(node: BinaryNode): T;
   visitInt(node: IntNode): T;
 }
