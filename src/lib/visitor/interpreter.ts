@@ -1,12 +1,13 @@
 import { Visitor } from "./visitor.js";
 import { RuntimeValue } from "./runtimeValue/runtimeValue.js";
 import { ProgramNode } from "../ast/nodes/program.js";
-import { IntValue } from "./runtimeValue/numberValue.js";
+import { BoolValue, IntValue } from "./runtimeValue/valuableValue.js";
 import { BinaryNode } from "../ast/nodes/binary.js";
 import { IntNode } from "../ast/nodes/int.js";
 import { CallNode } from "../ast/nodes/call.js";
 import { AssignNode } from "../ast/nodes/assign.js";
 import { VarNode } from "../ast/nodes/var.js";
+import { CompareNode } from "../ast/nodes/compare.js";
 
 type Func = (args: RuntimeValue[]) => RuntimeValue;
 
@@ -37,6 +38,14 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   visitBinary(node: BinaryNode): RuntimeValue {
     const left = node.left.accept(this);
     const right = node.right.accept(this);
+    // 本来は意味解析の部分で触れるが今回はここに書く
+    if (typeof left.value != "number") {
+      throw new Error("式の左辺には数値を入力しなければなりません");
+    }
+    if (typeof right.value != "number") {
+      throw new Error("式の右辺には数値を入力しなければなりません");
+    }
+    // 実行
     switch (node.operator) {
       case "+":
         return new IntValue(left.value + right.value);
@@ -46,6 +55,26 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
         return new IntValue(left.value * right.value);
       case "/":
         return new IntValue(left.value / right.value);
+      default:
+        throw new Error(`演算子 ${String(node.operator)} は未定義です`);
+    }
+  }
+  visitCompare(node: CompareNode): RuntimeValue {
+    const left = node.left.accept(this);
+    const right = node.right.accept(this);
+    switch (node.operator) {
+      case "==":
+        return new BoolValue(left.value == right.value);
+      case "!=":
+        return new BoolValue(left.value != right.value);
+      case ">=":
+        return new BoolValue(left.value >= right.value);
+      case "<=":
+        return new BoolValue(left.value <= right.value);
+      case ">":
+        return new BoolValue(left.value > right.value);
+      case "<":
+        return new BoolValue(left.value < right.value);
       default:
         throw new Error(`演算子 ${String(node.operator)} は未定義です`);
     }
