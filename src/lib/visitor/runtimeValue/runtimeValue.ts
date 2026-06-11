@@ -1,3 +1,3 @@
-import { NumberValue } from "./numberValue.js";
+import { ValuableValue } from "./valuableValue.js";
 
-export type RuntimeValue = NumberValue;
+export type RuntimeValue = ValuableValue<number> | ValuableValue<boolean>;
