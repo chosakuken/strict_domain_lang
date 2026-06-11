@@ -9,8 +9,12 @@ program
     ;
 
 statement
-    : call
-    | expr
+    : call SEMI
+    | assign SEMI
+    ;
+
+assign
+    : IDENT EQUAL expr
     ;
 
 expr
@@ -18,6 +22,7 @@ expr
     | expr op=(PLUS | MINUS) expr   # AddSub
     | LPAREN expr RPAREN            # Parens
     | INT                           # Int
+    | IDENT                         # Var
     ;
 
 call

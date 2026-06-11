@@ -4,9 +4,10 @@ import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "a
 
 import { ProgramContext } from "./BoQQIParser.js";
 import { StatementContext } from "./BoQQIParser.js";
+import { AssignContext } from "./BoQQIParser.js";
 import { ParensContext } from "./BoQQIParser.js";
 import { IntContext } from "./BoQQIParser.js";
-import { IdentContext } from "./BoQQIParser.js";
+import { VarContext } from "./BoQQIParser.js";
 import { MulDivContext } from "./BoQQIParser.js";
 import { AddSubContext } from "./BoQQIParser.js";
 import { CallContext } from "./BoQQIParser.js";
@@ -39,6 +40,16 @@ export class BoQQIParserListener implements ParseTreeListener {
      */
     exitStatement?: (ctx: StatementContext) => void;
     /**
+     * Enter a parse tree produced by `BoQQIParser.assign`.
+     * @param ctx the parse tree
+     */
+    enterAssign?: (ctx: AssignContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.assign`.
+     * @param ctx the parse tree
+     */
+    exitAssign?: (ctx: AssignContext) => void;
+    /**
      * Enter a parse tree produced by the `Parens`
      * labeled alternative in `BoQQIParser.expr`.
      * @param ctx the parse tree
@@ -63,17 +74,17 @@ export class BoQQIParserListener implements ParseTreeListener {
      */
     exitInt?: (ctx: IntContext) => void;
     /**
-     * Enter a parse tree produced by the `Ident`
+     * Enter a parse tree produced by the `Var`
      * labeled alternative in `BoQQIParser.expr`.
      * @param ctx the parse tree
      */
-    enterIdent?: (ctx: IdentContext) => void;
+    enterVar?: (ctx: VarContext) => void;
     /**
-     * Exit a parse tree produced by the `Ident`
+     * Exit a parse tree produced by the `Var`
      * labeled alternative in `BoQQIParser.expr`.
      * @param ctx the parse tree
      */
-    exitIdent?: (ctx: IdentContext) => void;
+    exitVar?: (ctx: VarContext) => void;
     /**
      * Enter a parse tree produced by the `MulDiv`
      * labeled alternative in `BoQQIParser.expr`.
