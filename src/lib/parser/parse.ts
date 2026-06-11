@@ -22,5 +22,8 @@ export function parseToTree(source: string): ParseResult {
 
 export function parse(source: string): ParseTreeJson {
   const res = parseToTree(source);
+  if (res.parser.numberOfSyntaxErrors > 0) {
+    throw new Error("[Parse Error]");
+  }
   return parseTreeToJson(res.tree, res.parser);
 }
