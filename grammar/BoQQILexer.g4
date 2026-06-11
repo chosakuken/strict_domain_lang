@@ -1,7 +1,7 @@
 lexer grammar BoQQILexer;
 
-INT : [0-9]+ ;
-IDENT : [a-zA-Z_][a-zA-Z0-9_]* ;
+IF : 'if' ;
+ELSE : 'else' ;
 
 PLUS  : '+' ;
 MINUS : '-' ;
@@ -17,10 +17,14 @@ LE : '<=' ;
 GT : '>' ;
 LT : '<' ;
 
-
 LPAREN : '(' ;
 RPAREN : ')' ;
+LBRACE : '{' ;
+RBRACE : '}' ;
 COMMA : ',' ;
 SEMI : ';' ;
+
+INT : [0-9]+ ;
+IDENT : [a-zA-Z_][a-zA-Z0-9_]* ;
 
 WS : [ \t\r\n]+ -> skip ;
