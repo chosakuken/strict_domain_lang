@@ -18,11 +18,13 @@ assign
     ;
 
 expr
-    : expr op=(MUL | DIV) expr      # MulDiv
-    | expr op=(PLUS | MINUS) expr   # AddSub
-    | LPAREN expr RPAREN            # Parens
-    | INT                           # Int
-    | IDENT                         # Var
+    : expr op=(MUL | DIV) expr          # MulDiv
+    | expr op=(PLUS | MINUS) expr       # AddSub
+    | expr op=(GE | LE | GT | LT) expr  # comp
+    | expr op=(EQ | NE) expr            # eq
+    | LPAREN expr RPAREN                # Parens
+    | INT                               # Int
+    | IDENT                             # Var
     ;
 
 call
