@@ -10,6 +10,8 @@ import { IntContext } from "./BoQQIParser.js";
 import { VarContext } from "./BoQQIParser.js";
 import { MulDivContext } from "./BoQQIParser.js";
 import { AddSubContext } from "./BoQQIParser.js";
+import { CompContext } from "./BoQQIParser.js";
+import { EqContext } from "./BoQQIParser.js";
 import { CallContext } from "./BoQQIParser.js";
 import { ArgsContext } from "./BoQQIParser.js";
 
@@ -109,6 +111,30 @@ export class BoQQIParserListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitAddSub?: (ctx: AddSubContext) => void;
+    /**
+     * Enter a parse tree produced by the `comp`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    enterComp?: (ctx: CompContext) => void;
+    /**
+     * Exit a parse tree produced by the `comp`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    exitComp?: (ctx: CompContext) => void;
+    /**
+     * Enter a parse tree produced by the `eq`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    enterEq?: (ctx: EqContext) => void;
+    /**
+     * Exit a parse tree produced by the `eq`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    exitEq?: (ctx: EqContext) => void;
     /**
      * Enter a parse tree produced by `BoQQIParser.call`.
      * @param ctx the parse tree

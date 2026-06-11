@@ -16,11 +16,17 @@ export class BoQQIParser extends antlr.Parser {
     public static readonly MUL = 5;
     public static readonly DIV = 6;
     public static readonly EQUAL = 7;
-    public static readonly LPAREN = 8;
-    public static readonly RPAREN = 9;
-    public static readonly COMMA = 10;
-    public static readonly SEMI = 11;
-    public static readonly WS = 12;
+    public static readonly EQ = 8;
+    public static readonly NE = 9;
+    public static readonly GE = 10;
+    public static readonly LE = 11;
+    public static readonly GT = 12;
+    public static readonly LT = 13;
+    public static readonly LPAREN = 14;
+    public static readonly RPAREN = 15;
+    public static readonly COMMA = 16;
+    public static readonly SEMI = 17;
+    public static readonly WS = 18;
     public static readonly RULE_program = 0;
     public static readonly RULE_statement = 1;
     public static readonly RULE_assign = 2;
@@ -29,13 +35,14 @@ export class BoQQIParser extends antlr.Parser {
     public static readonly RULE_args = 5;
 
     public static readonly literalNames = [
-        null, null, null, "'+'", "'-'", "'*'", "'/'", "'='", "'('", "')'", 
-        "','", "';'"
+        null, null, null, "'+'", "'-'", "'*'", "'/'", "'='", "'=='", "'!='", 
+        "'>='", "'<='", "'>'", "'<'", "'('", "')'", "','", "';'"
     ];
 
     public static readonly symbolicNames = [
-        null, "INT", "IDENT", "PLUS", "MINUS", "MUL", "DIV", "EQUAL", "LPAREN", 
-        "RPAREN", "COMMA", "SEMI", "WS"
+        null, "INT", "IDENT", "PLUS", "MINUS", "MUL", "DIV", "EQUAL", "EQ", 
+        "NE", "GE", "LE", "GT", "LT", "LPAREN", "RPAREN", "COMMA", "SEMI", 
+        "WS"
     ];
     public static readonly ruleNames = [
         "program", "statement", "assign", "expr", "call", "args",
@@ -218,7 +225,7 @@ export class BoQQIParser extends antlr.Parser {
                 throw new antlr.NoViableAltException(this);
             }
             this.context!.stop = this.tokenStream.LT(-1);
-            this.state = 49;
+            this.state = 55;
             this.errorHandler.sync(this);
             alternative = this.interpreter.adaptivePredict(this.tokenStream, 4, this.context);
             while (alternative !== 2 && alternative !== antlr.ATN.INVALID_ALT_NUMBER) {
@@ -228,7 +235,7 @@ export class BoQQIParser extends antlr.Parser {
                     }
                     previousContext = localContext;
                     {
-                    this.state = 47;
+                    this.state = 53;
                     this.errorHandler.sync(this);
                     switch (this.interpreter.adaptivePredict(this.tokenStream, 3, this.context) ) {
                     case 1:
@@ -236,8 +243,8 @@ export class BoQQIParser extends antlr.Parser {
                         localContext = new MulDivContext(new ExprContext(parentContext, parentState));
                         this.pushNewRecursionContext(localContext, _startState, BoQQIParser.RULE_expr);
                         this.state = 41;
-                        if (!(this.precpred(this.context, 5))) {
-                            throw this.createFailedPredicateException("this.precpred(this.context, 5)");
+                        if (!(this.precpred(this.context, 7))) {
+                            throw this.createFailedPredicateException("this.precpred(this.context, 7)");
                         }
                         this.state = 42;
                         (localContext as MulDivContext)._op = this.tokenStream.LT(1);
@@ -250,7 +257,7 @@ export class BoQQIParser extends antlr.Parser {
                             this.consume();
                         }
                         this.state = 43;
-                        this.expr(6);
+                        this.expr(8);
                         }
                         break;
                     case 2:
@@ -258,8 +265,8 @@ export class BoQQIParser extends antlr.Parser {
                         localContext = new AddSubContext(new ExprContext(parentContext, parentState));
                         this.pushNewRecursionContext(localContext, _startState, BoQQIParser.RULE_expr);
                         this.state = 44;
-                        if (!(this.precpred(this.context, 4))) {
-                            throw this.createFailedPredicateException("this.precpred(this.context, 4)");
+                        if (!(this.precpred(this.context, 6))) {
+                            throw this.createFailedPredicateException("this.precpred(this.context, 6)");
                         }
                         this.state = 45;
                         (localContext as AddSubContext)._op = this.tokenStream.LT(1);
@@ -272,13 +279,57 @@ export class BoQQIParser extends antlr.Parser {
                             this.consume();
                         }
                         this.state = 46;
+                        this.expr(7);
+                        }
+                        break;
+                    case 3:
+                        {
+                        localContext = new CompContext(new ExprContext(parentContext, parentState));
+                        this.pushNewRecursionContext(localContext, _startState, BoQQIParser.RULE_expr);
+                        this.state = 47;
+                        if (!(this.precpred(this.context, 5))) {
+                            throw this.createFailedPredicateException("this.precpred(this.context, 5)");
+                        }
+                        this.state = 48;
+                        (localContext as CompContext)._op = this.tokenStream.LT(1);
+                        _la = this.tokenStream.LA(1);
+                        if(!((((_la) & ~0x1F) === 0 && ((1 << _la) & 15360) !== 0))) {
+                            (localContext as CompContext)._op = this.errorHandler.recoverInline(this);
+                        }
+                        else {
+                            this.errorHandler.reportMatch(this);
+                            this.consume();
+                        }
+                        this.state = 49;
+                        this.expr(6);
+                        }
+                        break;
+                    case 4:
+                        {
+                        localContext = new EqContext(new ExprContext(parentContext, parentState));
+                        this.pushNewRecursionContext(localContext, _startState, BoQQIParser.RULE_expr);
+                        this.state = 50;
+                        if (!(this.precpred(this.context, 4))) {
+                            throw this.createFailedPredicateException("this.precpred(this.context, 4)");
+                        }
+                        this.state = 51;
+                        (localContext as EqContext)._op = this.tokenStream.LT(1);
+                        _la = this.tokenStream.LA(1);
+                        if(!(_la === 8 || _la === 9)) {
+                            (localContext as EqContext)._op = this.errorHandler.recoverInline(this);
+                        }
+                        else {
+                            this.errorHandler.reportMatch(this);
+                            this.consume();
+                        }
+                        this.state = 52;
                         this.expr(5);
                         }
                         break;
                     }
                     }
                 }
-                this.state = 51;
+                this.state = 57;
                 this.errorHandler.sync(this);
                 alternative = this.interpreter.adaptivePredict(this.tokenStream, 4, this.context);
             }
@@ -303,13 +354,13 @@ export class BoQQIParser extends antlr.Parser {
         try {
             this.enterOuterAlt(localContext, 1);
             {
-            this.state = 52;
+            this.state = 58;
             this.match(BoQQIParser.IDENT);
-            this.state = 53;
+            this.state = 59;
             this.match(BoQQIParser.LPAREN);
-            this.state = 54;
+            this.state = 60;
             this.args();
-            this.state = 55;
+            this.state = 61;
             this.match(BoQQIParser.RPAREN);
             }
         }
@@ -331,7 +382,7 @@ export class BoQQIParser extends antlr.Parser {
         this.enterRule(localContext, 10, BoQQIParser.RULE_args);
         let _la: number;
         try {
-            this.state = 66;
+            this.state = 72;
             this.errorHandler.sync(this);
             switch (this.tokenStream.LA(1)) {
             case BoQQIParser.INT:
@@ -339,21 +390,21 @@ export class BoQQIParser extends antlr.Parser {
             case BoQQIParser.LPAREN:
                 this.enterOuterAlt(localContext, 1);
                 {
-                this.state = 57;
+                this.state = 63;
                 this.expr(0);
-                this.state = 62;
+                this.state = 68;
                 this.errorHandler.sync(this);
                 _la = this.tokenStream.LA(1);
-                while (_la === 10) {
+                while (_la === 16) {
                     {
                     {
-                    this.state = 58;
+                    this.state = 64;
                     this.match(BoQQIParser.COMMA);
-                    this.state = 59;
+                    this.state = 65;
                     this.expr(0);
                     }
                     }
-                    this.state = 64;
+                    this.state = 70;
                     this.errorHandler.sync(this);
                     _la = this.tokenStream.LA(1);
                 }
@@ -393,35 +444,42 @@ export class BoQQIParser extends antlr.Parser {
     private expr_sempred(localContext: ExprContext | null, predIndex: number): boolean {
         switch (predIndex) {
         case 0:
-            return this.precpred(this.context, 5);
+            return this.precpred(this.context, 7);
         case 1:
+            return this.precpred(this.context, 6);
+        case 2:
+            return this.precpred(this.context, 5);
+        case 3:
             return this.precpred(this.context, 4);
         }
         return true;
     }
 
     public static readonly _serializedATN: number[] = [
-        4,1,12,69,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,5,
+        4,1,18,75,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,5,
         0,14,8,0,10,0,12,0,17,9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,3,1,27,
         8,1,1,2,1,2,1,2,1,2,1,3,1,3,1,3,1,3,1,3,1,3,1,3,3,3,40,8,3,1,3,1,
-        3,1,3,1,3,1,3,1,3,5,3,48,8,3,10,3,12,3,51,9,3,1,4,1,4,1,4,1,4,1,
-        4,1,5,1,5,1,5,5,5,61,8,5,10,5,12,5,64,9,5,1,5,3,5,67,8,5,1,5,0,1,
-        6,6,0,2,4,6,8,10,0,2,1,0,5,6,1,0,3,4,70,0,15,1,0,0,0,2,26,1,0,0,
-        0,4,28,1,0,0,0,6,39,1,0,0,0,8,52,1,0,0,0,10,66,1,0,0,0,12,14,3,2,
-        1,0,13,12,1,0,0,0,14,17,1,0,0,0,15,13,1,0,0,0,15,16,1,0,0,0,16,18,
-        1,0,0,0,17,15,1,0,0,0,18,19,5,0,0,1,19,1,1,0,0,0,20,21,3,8,4,0,21,
-        22,5,11,0,0,22,27,1,0,0,0,23,24,3,4,2,0,24,25,5,11,0,0,25,27,1,0,
-        0,0,26,20,1,0,0,0,26,23,1,0,0,0,27,3,1,0,0,0,28,29,5,2,0,0,29,30,
-        5,7,0,0,30,31,3,6,3,0,31,5,1,0,0,0,32,33,6,3,-1,0,33,34,5,8,0,0,
-        34,35,3,6,3,0,35,36,5,9,0,0,36,40,1,0,0,0,37,40,5,1,0,0,38,40,5,
-        2,0,0,39,32,1,0,0,0,39,37,1,0,0,0,39,38,1,0,0,0,40,49,1,0,0,0,41,
-        42,10,5,0,0,42,43,7,0,0,0,43,48,3,6,3,6,44,45,10,4,0,0,45,46,7,1,
-        0,0,46,48,3,6,3,5,47,41,1,0,0,0,47,44,1,0,0,0,48,51,1,0,0,0,49,47,
-        1,0,0,0,49,50,1,0,0,0,50,7,1,0,0,0,51,49,1,0,0,0,52,53,5,2,0,0,53,
-        54,5,8,0,0,54,55,3,10,5,0,55,56,5,9,0,0,56,9,1,0,0,0,57,62,3,6,3,
-        0,58,59,5,10,0,0,59,61,3,6,3,0,60,58,1,0,0,0,61,64,1,0,0,0,62,60,
-        1,0,0,0,62,63,1,0,0,0,63,67,1,0,0,0,64,62,1,0,0,0,65,67,1,0,0,0,
-        66,57,1,0,0,0,66,65,1,0,0,0,67,11,1,0,0,0,7,15,26,39,47,49,62,66
+        3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,5,3,54,8,3,10,3,12,3,57,
+        9,3,1,4,1,4,1,4,1,4,1,4,1,5,1,5,1,5,5,5,67,8,5,10,5,12,5,70,9,5,
+        1,5,3,5,73,8,5,1,5,0,1,6,6,0,2,4,6,8,10,0,4,1,0,5,6,1,0,3,4,1,0,
+        10,13,1,0,8,9,78,0,15,1,0,0,0,2,26,1,0,0,0,4,28,1,0,0,0,6,39,1,0,
+        0,0,8,58,1,0,0,0,10,72,1,0,0,0,12,14,3,2,1,0,13,12,1,0,0,0,14,17,
+        1,0,0,0,15,13,1,0,0,0,15,16,1,0,0,0,16,18,1,0,0,0,17,15,1,0,0,0,
+        18,19,5,0,0,1,19,1,1,0,0,0,20,21,3,8,4,0,21,22,5,17,0,0,22,27,1,
+        0,0,0,23,24,3,4,2,0,24,25,5,17,0,0,25,27,1,0,0,0,26,20,1,0,0,0,26,
+        23,1,0,0,0,27,3,1,0,0,0,28,29,5,2,0,0,29,30,5,7,0,0,30,31,3,6,3,
+        0,31,5,1,0,0,0,32,33,6,3,-1,0,33,34,5,14,0,0,34,35,3,6,3,0,35,36,
+        5,15,0,0,36,40,1,0,0,0,37,40,5,1,0,0,38,40,5,2,0,0,39,32,1,0,0,0,
+        39,37,1,0,0,0,39,38,1,0,0,0,40,55,1,0,0,0,41,42,10,7,0,0,42,43,7,
+        0,0,0,43,54,3,6,3,8,44,45,10,6,0,0,45,46,7,1,0,0,46,54,3,6,3,7,47,
+        48,10,5,0,0,48,49,7,2,0,0,49,54,3,6,3,6,50,51,10,4,0,0,51,52,7,3,
+        0,0,52,54,3,6,3,5,53,41,1,0,0,0,53,44,1,0,0,0,53,47,1,0,0,0,53,50,
+        1,0,0,0,54,57,1,0,0,0,55,53,1,0,0,0,55,56,1,0,0,0,56,7,1,0,0,0,57,
+        55,1,0,0,0,58,59,5,2,0,0,59,60,5,14,0,0,60,61,3,10,5,0,61,62,5,15,
+        0,0,62,9,1,0,0,0,63,68,3,6,3,0,64,65,5,16,0,0,65,67,3,6,3,0,66,64,
+        1,0,0,0,67,70,1,0,0,0,68,66,1,0,0,0,68,69,1,0,0,0,69,73,1,0,0,0,
+        70,68,1,0,0,0,71,73,1,0,0,0,72,63,1,0,0,0,72,71,1,0,0,0,73,11,1,
+        0,0,0,7,15,26,39,53,55,68,72
     ];
 
     private static __ATN: antlr.ATN;
@@ -668,6 +726,76 @@ export class AddSubContext extends ExprContext {
     public override exitRule(listener: BoQQIParserListener): void {
         if(listener.exitAddSub) {
              listener.exitAddSub(this);
+        }
+    }
+}
+export class CompContext extends ExprContext {
+    public _op?: Token | null;
+    public constructor(ctx: ExprContext) {
+        super(ctx.parent, ctx.invokingState);
+        super.copyFrom(ctx);
+    }
+    public expr(): ExprContext[];
+    public expr(i: number): ExprContext | null;
+    public expr(i?: number): ExprContext[] | ExprContext | null {
+        if (i === undefined) {
+            return this.getRuleContexts(ExprContext);
+        }
+
+        return this.getRuleContext(i, ExprContext);
+    }
+    public GE(): antlr.TerminalNode | null {
+        return this.getToken(BoQQIParser.GE, 0);
+    }
+    public LE(): antlr.TerminalNode | null {
+        return this.getToken(BoQQIParser.LE, 0);
+    }
+    public GT(): antlr.TerminalNode | null {
+        return this.getToken(BoQQIParser.GT, 0);
+    }
+    public LT(): antlr.TerminalNode | null {
+        return this.getToken(BoQQIParser.LT, 0);
+    }
+    public override enterRule(listener: BoQQIParserListener): void {
+        if(listener.enterComp) {
+             listener.enterComp(this);
+        }
+    }
+    public override exitRule(listener: BoQQIParserListener): void {
+        if(listener.exitComp) {
+             listener.exitComp(this);
+        }
+    }
+}
+export class EqContext extends ExprContext {
+    public _op?: Token | null;
+    public constructor(ctx: ExprContext) {
+        super(ctx.parent, ctx.invokingState);
+        super.copyFrom(ctx);
+    }
+    public expr(): ExprContext[];
+    public expr(i: number): ExprContext | null;
+    public expr(i?: number): ExprContext[] | ExprContext | null {
+        if (i === undefined) {
+            return this.getRuleContexts(ExprContext);
+        }
+
+        return this.getRuleContext(i, ExprContext);
+    }
+    public EQ(): antlr.TerminalNode | null {
+        return this.getToken(BoQQIParser.EQ, 0);
+    }
+    public NE(): antlr.TerminalNode | null {
+        return this.getToken(BoQQIParser.NE, 0);
+    }
+    public override enterRule(listener: BoQQIParserListener): void {
+        if(listener.enterEq) {
+             listener.enterEq(this);
+        }
+    }
+    public override exitRule(listener: BoQQIParserListener): void {
+        if(listener.exitEq) {
+             listener.exitEq(this);
         }
     }
 }

@@ -2,6 +2,8 @@ import {
   AddSubContext,
   AssignContext,
   CallContext,
+  CompContext,
+  EqContext,
   ExprContext,
   IntContext,
   MulDivContext,
@@ -13,6 +15,7 @@ import {
 import { AssignNode } from "./nodes/assign.js";
 import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
 import { CallNode } from "./nodes/call.js";
+import { CompareNode, type CompareOperator } from "./nodes/compare.js";
 import type { ExprNode } from "./nodes/expr.js";
 import { IntNode } from "./nodes/int.js";
 import { ProgramNode } from "./nodes/program.js";
@@ -81,9 +84,42 @@ export function buildExprAst(ctx: ExprContext): ExprNode {
     return new BinaryNode(operator, buildExprAst(left), buildExprAst(right));
   }
 
+  if (ctx instanceof CompContext || ctx instanceof EqContext) {
+    const left = ctx.expr(0);
+    const right = ctx.expr(1);
+    const operator = ctx._op?.text;
+
+    if (left === null || right === null) {
+      throw new Error(
+        `Compare expression is missing operands: ${ctx.getText()}`,
+      );
+    }
+
+    if (!isCompareOperator(operator)) {
+      throw new Error(
+        `Unsupported compare operator: ${operator ?? "<missing>"}`,
+      );
+    }
+
+    return new CompareNode(operator, buildExprAst(left), buildExprAst(right));
+  }
+
   throw new Error(`Unsupported expression context: ${ctx.constructor.name}`);
 }
 
 function isBinaryOperator(value: string | undefined): value is BinaryOperator {
   return value === "+" || value === "-" || value === "*" || value === "/";
+}
+
+function isCompareOperator(
+  value: string | undefined,
+): value is CompareOperator {
+  return (
+    value === "==" ||
+    value === "!=" ||
+    value === "<" ||
+    value === ">" ||
+    value === "<=" ||
+    value === ">="
+  );
 }

@@ -10,6 +10,14 @@ DIV   : '/' ;
 
 EQUAL : '=' ;
 
+EQ : '==' ;
+NE : '!=' ;
+GE : '>=' ;
+LE : '<=' ;
+GT : '>' ;
+LT : '<' ;
+
+
 LPAREN : '(' ;
 RPAREN : ')' ;
 COMMA : ',' ;
