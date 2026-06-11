@@ -8,8 +8,11 @@ MINUS : '-' ;
 MUL   : '*' ;
 DIV   : '/' ;
 
+EQUAL : '=' ;
+
 LPAREN : '(' ;
 RPAREN : ')' ;
 COMMA : ',' ;
+SEMI : ';' ;
 
 WS : [ \t\r\n]+ -> skip ;
