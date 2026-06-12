@@ -3,6 +3,7 @@ import {
   AssignContext,
   CallContext,
   CompContext,
+  DeclareContext,
   EqContext,
   ExprContext,
   FloatContext,
@@ -19,6 +20,7 @@ import { AssignNode } from "./nodes/assign.js";
 import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
 import { CallNode } from "./nodes/call.js";
 import { CompareNode, type CompareOperator } from "./nodes/compare.js";
+import { DeclareNode } from "./nodes/declare.js";
 import type { ExprNode } from "./nodes/expr.js";
 import { FloatNode } from "./nodes/float.js";
 import { IfNode } from "./nodes/if.js";
@@ -46,6 +48,11 @@ export function buildStatementAst(ctx: StatementContext): StatementNode {
   const assign = ctx.assign();
   if (assign !== null) {
     return buildAssignAst(assign);
+  }
+
+  const declare = ctx.declare();
+  if (declare !== null) {
+    return buildDeclareAst(declare);
   }
 
   throw new Error(`Unsupported statement context: ${ctx.getText()}`);
@@ -88,6 +95,16 @@ export function buildIfAst(ctx: IfContext): IfNode {
 
 export function buildAssignAst(ctx: AssignContext): AssignNode {
   return new AssignNode(ctx.IDENT().getText(), buildExprAst(ctx.expr()));
+}
+
+export function buildDeclareAst(ctx: DeclareContext): DeclareNode {
+  const initExpr = ctx.expr();
+
+  return new DeclareNode(
+    ctx.type().getText(),
+    ctx.IDENT().getText(),
+    initExpr === null ? undefined : buildExprAst(initExpr),
+  );
 }
 
 export function buildCallAst(ctx: CallContext): CallNode {
