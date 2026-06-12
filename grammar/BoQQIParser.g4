@@ -29,8 +29,12 @@ args
     ;
 
 declare
-    : type IDENT
-    | type IDENT EQUAL expr
+    : type domain? IDENT
+    | type domain? IDENT EQUAL expr
+    ;
+
+domain
+    : LBRACE MAX COLON expr COMMA MIN COLON expr RBRACE
     ;
 
 assign
