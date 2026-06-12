@@ -8,6 +8,7 @@ import {
   StringValue,
 } from "./runtimeValue/valuableValue.js";
 import { BinaryNode } from "../ast/nodes/binary.js";
+import { BoolNode } from "../ast/nodes/bool.js";
 import { IntNode } from "../ast/nodes/int.js";
 import { CallNode } from "../ast/nodes/call.js";
 import { AssignNode } from "../ast/nodes/assign.js";
@@ -97,6 +98,9 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   visitString(node: StringNode): RuntimeValue {
     return new StringValue(node.value);
   }
+  visitBool(node: BoolNode): RuntimeValue {
+    return new BoolValue(node.value);
+  }
   visitCall(node: CallNode): RuntimeValue {
     const func = this.funcs.get(node.name);
     if (func === undefined) {
@@ -152,6 +156,14 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
           node.initValue !== undefined
             ? node.initValue.accept(this)
             : new StringValue(""),
+        );
+        break;
+      case "bool":
+        this.vars.set(
+          node.name,
+          node.initValue !== undefined
+            ? node.initValue.accept(this)
+            : new BoolValue(false),
         );
         break;
       default:
