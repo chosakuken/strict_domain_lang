@@ -19,6 +19,15 @@ if
     : IF LPAREN expr RPAREN LBRACE statement* RBRACE (ELSE LBRACE statement* RBRACE)?
     ;
 
+call
+    : IDENT LPAREN args RPAREN
+    ;
+
+args
+    : expr (COMMA expr)*
+    |
+    ;
+
 declare
     : type IDENT
     | type IDENT EQUAL expr
@@ -32,6 +41,7 @@ type
     : TYPE_INT
     | TYPE_FLOAT
     | TYPE_STRING
+    | TYPE_BOOL
     ;
 
 expr
@@ -43,14 +53,11 @@ expr
     | FLOAT                             # Float
     | INT                               # Int
     | STRING                            # String
+    | boolean                           # bool
     | IDENT                             # Var
     ;
 
-call
-    : IDENT LPAREN args RPAREN
-    ;
-
-args
-    : expr (COMMA expr)*
-    |
+boolean
+    : TRUE
+    | FALSE
     ;
