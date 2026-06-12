@@ -7,7 +7,9 @@ import { StatementContext } from "./BoQQIParser.js";
 import { IfContext } from "./BoQQIParser.js";
 import { AssignContext } from "./BoQQIParser.js";
 import { ParensContext } from "./BoQQIParser.js";
+import { FloatContext } from "./BoQQIParser.js";
 import { IntContext } from "./BoQQIParser.js";
+import { StringContext } from "./BoQQIParser.js";
 import { VarContext } from "./BoQQIParser.js";
 import { MulDivContext } from "./BoQQIParser.js";
 import { AddSubContext } from "./BoQQIParser.js";
@@ -75,6 +77,18 @@ export class BoQQIParserListener implements ParseTreeListener {
      */
     exitParens?: (ctx: ParensContext) => void;
     /**
+     * Enter a parse tree produced by the `Float`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    enterFloat?: (ctx: FloatContext) => void;
+    /**
+     * Exit a parse tree produced by the `Float`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    exitFloat?: (ctx: FloatContext) => void;
+    /**
      * Enter a parse tree produced by the `Int`
      * labeled alternative in `BoQQIParser.expr`.
      * @param ctx the parse tree
@@ -86,6 +100,18 @@ export class BoQQIParserListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitInt?: (ctx: IntContext) => void;
+    /**
+     * Enter a parse tree produced by the `String`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    enterString?: (ctx: StringContext) => void;
+    /**
+     * Exit a parse tree produced by the `String`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    exitString?: (ctx: StringContext) => void;
     /**
      * Enter a parse tree produced by the `Var`
      * labeled alternative in `BoQQIParser.expr`.

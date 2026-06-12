@@ -28,7 +28,9 @@ expr
     | expr op=(GE | LE | GT | LT) expr  # comp
     | expr op=(EQ | NE) expr            # eq
     | LPAREN expr RPAREN                # Parens
+    | FLOAT                             # Float
     | INT                               # Int
+    | STRING                            # String
     | IDENT                             # Var
     ;
 
