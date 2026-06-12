@@ -48,10 +48,10 @@ export function buildStatementAst(ctx: StatementContext): StatementNode {
 }
 
 export function buildIfAst(ctx: IfContext): IfNode {
-  const [thenOpen, elseOpen] = ctx.LBRACE();
-  const [thenClose, elseClose] = ctx.RBRACE();
+  const thenOpen = ctx.LBRACE(0);
+  const thenClose = ctx.RBRACE(0);
 
-  if (thenOpen === undefined || thenClose === undefined) {
+  if (thenOpen === null || thenClose === null) {
     throw new Error(`If statement is missing then block: ${ctx.getText()}`);
   }
 
@@ -66,7 +66,10 @@ export function buildIfAst(ctx: IfContext): IfNode {
     return new IfNode(buildExprAst(ctx.expr()), thenStatements);
   }
 
-  if (elseOpen === undefined || elseClose === undefined) {
+  const elseOpen = ctx.LBRACE(1);
+  const elseClose = ctx.RBRACE(1);
+
+  if (elseOpen === null || elseClose === null) {
     throw new Error(`If statement is missing else block: ${ctx.getText()}`);
   }
 
