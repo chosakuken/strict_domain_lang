@@ -2,6 +2,7 @@ import { AssignNode } from "../ast/nodes/assign.js";
 import { BinaryNode } from "../ast/nodes/binary.js";
 import { CallNode } from "../ast/nodes/call.js";
 import { CompareNode } from "../ast/nodes/compare.js";
+import { DeclareNode } from "../ast/nodes/declare.js";
 import { FloatNode } from "../ast/nodes/float.js";
 import { IfNode } from "../ast/nodes/if.js";
 import { IntNode } from "../ast/nodes/int.js";
@@ -19,6 +20,7 @@ export interface Visitor<T> {
   visitString(node: StringNode): T;
   visitCall(node: CallNode): T;
   visitAssign(node: AssignNode): T;
+  visitDeclare(node: DeclareNode): T;
   visitVar(node: VarNode): T;
   visitIf(node: IfNode): T;
 }
