@@ -112,13 +112,14 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   }
   visitAssign(node: AssignNode): RuntimeValue {
     const value = node.expr.accept(this);
+    const currentValue = this.vars.get(node.name);
     // エラーハンドリング
-    if (!this.vars.get(node.name)) {
+    if (currentValue === undefined) {
       throw new Error(`変数 ${node.name} は宣言されていません`);
     }
-    if (value.type !== this.vars.get(node.name)?.type) {
+    if (value.type !== currentValue.type) {
       throw new Error(
-        `変数 ${node.name} は ${this.vars.get(node.name)?.type} 型ですが、${value.type} 型が代入されようとしました`,
+        `変数 ${node.name} は ${currentValue.type} 型ですが、${value.type} 型が代入されようとしました`,
       );
     }
     this.vars.set(node.name, value);
@@ -132,19 +133,25 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
       case "int":
         this.vars.set(
           node.name,
-          node.initValue ? node.initValue.accept(this) : new IntValue(0),
+          node.initValue !== undefined
+            ? node.initValue.accept(this)
+            : new IntValue(0),
         );
         break;
       case "float":
         this.vars.set(
           node.name,
-          node.initValue ? node.initValue.accept(this) : new FloatValue(0.0),
+          node.initValue !== undefined
+            ? node.initValue.accept(this)
+            : new FloatValue(0.0),
         );
         break;
       case "string":
         this.vars.set(
           node.name,
-          node.initValue ? node.initValue.accept(this) : new StringValue(""),
+          node.initValue !== undefined
+            ? node.initValue.accept(this)
+            : new StringValue(""),
         );
         break;
       default:
