@@ -8,6 +8,7 @@ import { CallNode } from "../ast/nodes/call.js";
 import { AssignNode } from "../ast/nodes/assign.js";
 import { VarNode } from "../ast/nodes/var.js";
 import { CompareNode } from "../ast/nodes/compare.js";
+import { IfNode } from "../ast/nodes/if.js";
 
 type Func = (args: RuntimeValue[]) => RuntimeValue;
 
@@ -112,5 +113,23 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
       throw new Error(`変数 ${node.name} は未定義です`);
     }
     return value;
+  }
+  visitIf(node: IfNode): RuntimeValue {
+    const cond = node.cond.accept(this);
+    // エラーハンドリング
+    if (typeof cond.value !== "boolean") {
+      throw new Error("if 文の条件式には真偽値を入力しなければなりません");
+    }
+    // 実行
+    if (cond.value) {
+      for (const statement of node.trueStatement) {
+        statement.accept(this);
+      }
+    } else if (node.falseStatement !== undefined) {
+      for (const statement of node.falseStatement) {
+        statement.accept(this);
+      }
+    }
+    return new IntValue(0); // 正常動作として 0 を返す
   }
 }
