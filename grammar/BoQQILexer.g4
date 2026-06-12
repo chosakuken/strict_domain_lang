@@ -2,9 +2,13 @@ lexer grammar BoQQILexer;
 
 IF : 'if' ;
 ELSE : 'else' ;
+TRUE : 'true' ;
+FALSE : 'false' ;
+
 TYPE_INT : 'int' ;
 TYPE_FLOAT : 'float' ;
 TYPE_STRING : 'string' ;
+TYPE_BOOL : 'bool';
 
 PLUS  : '+' ;
 MINUS : '-' ;

@@ -5,6 +5,8 @@ import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "a
 import { ProgramContext } from "./BoQQIParser.js";
 import { StatementContext } from "./BoQQIParser.js";
 import { IfContext } from "./BoQQIParser.js";
+import { CallContext } from "./BoQQIParser.js";
+import { ArgsContext } from "./BoQQIParser.js";
 import { DeclareContext } from "./BoQQIParser.js";
 import { AssignContext } from "./BoQQIParser.js";
 import { TypeContext } from "./BoQQIParser.js";
@@ -12,13 +14,13 @@ import { ParensContext } from "./BoQQIParser.js";
 import { FloatContext } from "./BoQQIParser.js";
 import { IntContext } from "./BoQQIParser.js";
 import { StringContext } from "./BoQQIParser.js";
+import { BoolContext } from "./BoQQIParser.js";
 import { VarContext } from "./BoQQIParser.js";
 import { MulDivContext } from "./BoQQIParser.js";
 import { AddSubContext } from "./BoQQIParser.js";
 import { CompContext } from "./BoQQIParser.js";
 import { EqContext } from "./BoQQIParser.js";
-import { CallContext } from "./BoQQIParser.js";
-import { ArgsContext } from "./BoQQIParser.js";
+import { BooleanContext } from "./BoQQIParser.js";
 
 
 /**
@@ -56,6 +58,26 @@ export class BoQQIParserListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitIf?: (ctx: IfContext) => void;
+    /**
+     * Enter a parse tree produced by `BoQQIParser.call`.
+     * @param ctx the parse tree
+     */
+    enterCall?: (ctx: CallContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.call`.
+     * @param ctx the parse tree
+     */
+    exitCall?: (ctx: CallContext) => void;
+    /**
+     * Enter a parse tree produced by `BoQQIParser.args`.
+     * @param ctx the parse tree
+     */
+    enterArgs?: (ctx: ArgsContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.args`.
+     * @param ctx the parse tree
+     */
+    exitArgs?: (ctx: ArgsContext) => void;
     /**
      * Enter a parse tree produced by `BoQQIParser.declare`.
      * @param ctx the parse tree
@@ -135,6 +157,18 @@ export class BoQQIParserListener implements ParseTreeListener {
      */
     exitString?: (ctx: StringContext) => void;
     /**
+     * Enter a parse tree produced by the `bool`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    enterBool?: (ctx: BoolContext) => void;
+    /**
+     * Exit a parse tree produced by the `bool`
+     * labeled alternative in `BoQQIParser.expr`.
+     * @param ctx the parse tree
+     */
+    exitBool?: (ctx: BoolContext) => void;
+    /**
      * Enter a parse tree produced by the `Var`
      * labeled alternative in `BoQQIParser.expr`.
      * @param ctx the parse tree
@@ -195,25 +229,15 @@ export class BoQQIParserListener implements ParseTreeListener {
      */
     exitEq?: (ctx: EqContext) => void;
     /**
-     * Enter a parse tree produced by `BoQQIParser.call`.
+     * Enter a parse tree produced by `BoQQIParser.boolean`.
      * @param ctx the parse tree
      */
-    enterCall?: (ctx: CallContext) => void;
+    enterBoolean?: (ctx: BooleanContext) => void;
     /**
-     * Exit a parse tree produced by `BoQQIParser.call`.
+     * Exit a parse tree produced by `BoQQIParser.boolean`.
      * @param ctx the parse tree
      */
-    exitCall?: (ctx: CallContext) => void;
-    /**
-     * Enter a parse tree produced by `BoQQIParser.args`.
-     * @param ctx the parse tree
-     */
-    enterArgs?: (ctx: ArgsContext) => void;
-    /**
-     * Exit a parse tree produced by `BoQQIParser.args`.
-     * @param ctx the parse tree
-     */
-    exitArgs?: (ctx: ArgsContext) => void;
+    exitBoolean?: (ctx: BooleanContext) => void;
 
     visitTerminal(node: TerminalNode): void {}
     visitErrorNode(node: ErrorNode): void {}

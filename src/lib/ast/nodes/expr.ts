@@ -1,4 +1,5 @@
 import { BinaryNode } from "./binary.js";
+import { BoolNode } from "./bool.js";
 import { CompareNode } from "./compare.js";
 import { FloatNode } from "./float.js";
 import { IntNode } from "./int.js";
@@ -9,6 +10,7 @@ export type ExprNode =
   | IntNode
   | FloatNode
   | StringNode
+  | BoolNode
   | BinaryNode
   | VarNode
   | CompareNode;
