@@ -9,8 +9,13 @@ program
     ;
 
 statement
-    : call SEMI
+    : if
+    | call SEMI
     | assign SEMI
+    ;
+
+if
+    : IF LPAREN expr RPAREN LBRACE statement* RBRACE (ELSE LBRACE statement* RBRACE)?
     ;
 
 assign

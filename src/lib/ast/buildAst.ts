@@ -5,6 +5,7 @@ import {
   CompContext,
   EqContext,
   ExprContext,
+  IfContext,
   IntContext,
   MulDivContext,
   ParensContext,
@@ -17,6 +18,7 @@ import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
 import { CallNode } from "./nodes/call.js";
 import { CompareNode, type CompareOperator } from "./nodes/compare.js";
 import type { ExprNode } from "./nodes/expr.js";
+import { IfNode } from "./nodes/if.js";
 import { IntNode } from "./nodes/int.js";
 import { ProgramNode } from "./nodes/program.js";
 import type { StatementNode } from "./nodes/statement.js";
@@ -27,6 +29,11 @@ export function buildProgramAst(ctx: ProgramContext): ProgramNode {
 }
 
 export function buildStatementAst(ctx: StatementContext): StatementNode {
+  const if_ = ctx.if();
+  if (if_ !== null) {
+    return buildIfAst(if_);
+  }
+
   const call = ctx.call();
   if (call !== null) {
     return buildCallAst(call);
@@ -38,6 +45,41 @@ export function buildStatementAst(ctx: StatementContext): StatementNode {
   }
 
   throw new Error(`Unsupported statement context: ${ctx.getText()}`);
+}
+
+export function buildIfAst(ctx: IfContext): IfNode {
+  const thenOpen = ctx.LBRACE(0);
+  const thenClose = ctx.RBRACE(0);
+
+  if (thenOpen === null || thenClose === null) {
+    throw new Error(`If statement is missing then block: ${ctx.getText()}`);
+  }
+
+  const thenStatements = getStatementsBetween(
+    ctx,
+    thenOpen.getSymbol().tokenIndex,
+    thenClose.getSymbol().tokenIndex,
+  ).map(buildStatementAst);
+
+  const elseToken = ctx.ELSE();
+  if (elseToken === null) {
+    return new IfNode(buildExprAst(ctx.expr()), thenStatements);
+  }
+
+  const elseOpen = ctx.LBRACE(1);
+  const elseClose = ctx.RBRACE(1);
+
+  if (elseOpen === null || elseClose === null) {
+    throw new Error(`If statement is missing else block: ${ctx.getText()}`);
+  }
+
+  const elseStatements = getStatementsBetween(
+    ctx,
+    elseOpen.getSymbol().tokenIndex,
+    elseClose.getSymbol().tokenIndex,
+  ).map(buildStatementAst);
+
+  return new IfNode(buildExprAst(ctx.expr()), thenStatements, elseStatements);
 }
 
 export function buildAssignAst(ctx: AssignContext): AssignNode {
@@ -122,4 +164,22 @@ function isCompareOperator(
     value === "<=" ||
     value === ">="
   );
+}
+
+function getStatementsBetween(
+  ctx: IfContext,
+  startTokenIndex: number,
+  stopTokenIndex: number,
+): StatementContext[] {
+  return ctx.statement().filter((statement) => {
+    const start = statement.start?.tokenIndex;
+    const stop = statement.stop?.tokenIndex;
+
+    return (
+      start !== undefined &&
+      stop !== undefined &&
+      start > startTokenIndex &&
+      stop < stopTokenIndex
+    );
+  });
 }
