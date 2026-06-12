@@ -58,13 +58,29 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
     // 実行
     switch (node.operator) {
       case "+":
-        return this.numberToRuntimeValue(left.value + right.value);
+        return this.numberToRuntimeValue(
+          this.numericResultType(left, right),
+          left.value + right.value,
+        );
       case "-":
-        return this.numberToRuntimeValue(left.value - right.value);
+        return this.numberToRuntimeValue(
+          this.numericResultType(left, right),
+          left.value - right.value,
+        );
       case "*":
-        return this.numberToRuntimeValue(left.value * right.value);
+        return this.numberToRuntimeValue(
+          this.numericResultType(left, right),
+          left.value * right.value,
+        );
       case "/":
-        return this.numberToRuntimeValue(left.value / right.value);
+        // ゼロ除算
+        if (right.value === 0) {
+          throw new Error("0 除算が検出されました");
+        }
+        return this.numberToRuntimeValue(
+          this.numericResultType(left, right),
+          left.value / right.value,
+        );
       default:
         throw new Error(`演算子 ${String(node.operator)} は未定義です`);
     }
@@ -197,9 +213,15 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
     return new IntValue(0); // 正常動作として 0 を返す
   }
   // ヘルパー関数
-  private numberToRuntimeValue(value: number): RuntimeValue {
-    if (Number.isInteger(value)) {
-      return new IntValue(value);
+  private numericResultType(left: RuntimeValue, right: RuntimeValue): string {
+    return left.type === "int" && right.type === "int" ? "int" : "float";
+  }
+  private numberToRuntimeValue(type: string, value: number): RuntimeValue {
+    if (!Number.isFinite(value)) {
+      throw new Error("計算結果が有限の数値ではありません");
+    }
+    if (type === "int") {
+      return new IntValue(Math.floor(value));
     }
     return new FloatValue(value);
   }
