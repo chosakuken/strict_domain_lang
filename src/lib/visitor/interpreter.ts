@@ -16,6 +16,7 @@ import { CompareNode } from "../ast/nodes/compare.js";
 import { IfNode } from "../ast/nodes/if.js";
 import { FloatNode } from "../ast/nodes/float.js";
 import { StringNode } from "../ast/nodes/string.js";
+import { DeclareNode } from "../ast/nodes/declare.js";
 
 type Func = (args: RuntimeValue[]) => RuntimeValue;
 
@@ -111,8 +112,52 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   }
   visitAssign(node: AssignNode): RuntimeValue {
     const value = node.expr.accept(this);
+    const currentValue = this.vars.get(node.name);
+    // エラーハンドリング
+    if (currentValue === undefined) {
+      throw new Error(`変数 ${node.name} は宣言されていません`);
+    }
+    if (value.type !== currentValue.type) {
+      throw new Error(
+        `変数 ${node.name} は ${currentValue.type} 型ですが、${value.type} 型が代入されようとしました`,
+      );
+    }
     this.vars.set(node.name, value);
     return value;
+  }
+  visitDeclare(node: DeclareNode): RuntimeValue {
+    if (this.vars.has(node.name)) {
+      throw new Error(`変数 ${node.name} は既に宣言済みです`);
+    }
+    switch (node.type) {
+      case "int":
+        this.vars.set(
+          node.name,
+          node.initValue !== undefined
+            ? node.initValue.accept(this)
+            : new IntValue(0),
+        );
+        break;
+      case "float":
+        this.vars.set(
+          node.name,
+          node.initValue !== undefined
+            ? node.initValue.accept(this)
+            : new FloatValue(0.0),
+        );
+        break;
+      case "string":
+        this.vars.set(
+          node.name,
+          node.initValue !== undefined
+            ? node.initValue.accept(this)
+            : new StringValue(""),
+        );
+        break;
+      default:
+        throw new Error(`型 ${node.type} は存在しません`);
+    }
+    return new IntValue(0); // 正常動作として 0 を返す
   }
   visitVar(node: VarNode): RuntimeValue {
     const value = this.vars.get(node.name);

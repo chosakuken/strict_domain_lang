@@ -11,6 +11,7 @@ program
 statement
     : if
     | call SEMI
+    | declare SEMI
     | assign SEMI
     ;
 
@@ -18,8 +19,19 @@ if
     : IF LPAREN expr RPAREN LBRACE statement* RBRACE (ELSE LBRACE statement* RBRACE)?
     ;
 
+declare
+    : type IDENT
+    | type IDENT EQUAL expr
+    ;
+
 assign
     : IDENT EQUAL expr
+    ;
+
+type
+    : TYPE_INT
+    | TYPE_FLOAT
+    | TYPE_STRING
     ;
 
 expr
