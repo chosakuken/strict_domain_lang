@@ -20,3 +20,21 @@ export class BoolValue implements ValuableValue<boolean> {
     this.value = v;
   }
 }
+
+export class FloatValue implements ValuableValue<number> {
+  readonly type: "float";
+  readonly value: number;
+  constructor(v: number) {
+    this.type = "float";
+    this.value = v;
+  }
+}
+
+export class StringValue implements ValuableValue<string> {
+  readonly type: "string";
+  readonly value: string;
+  constructor(v: string) {
+    this.type = "string";
+    this.value = v;
+  }
+}

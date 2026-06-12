@@ -1,7 +1,12 @@
 import { Visitor } from "./visitor.js";
 import { RuntimeValue } from "./runtimeValue/runtimeValue.js";
 import { ProgramNode } from "../ast/nodes/program.js";
-import { BoolValue, IntValue } from "./runtimeValue/valuableValue.js";
+import {
+  BoolValue,
+  FloatValue,
+  IntValue,
+  StringValue,
+} from "./runtimeValue/valuableValue.js";
 import { BinaryNode } from "../ast/nodes/binary.js";
 import { IntNode } from "../ast/nodes/int.js";
 import { CallNode } from "../ast/nodes/call.js";
@@ -9,6 +14,8 @@ import { AssignNode } from "../ast/nodes/assign.js";
 import { VarNode } from "../ast/nodes/var.js";
 import { CompareNode } from "../ast/nodes/compare.js";
 import { IfNode } from "../ast/nodes/if.js";
+import { FloatNode } from "../ast/nodes/float.js";
+import { StringNode } from "../ast/nodes/string.js";
 
 type Func = (args: RuntimeValue[]) => RuntimeValue;
 
@@ -49,13 +56,13 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
     // 実行
     switch (node.operator) {
       case "+":
-        return new IntValue(left.value + right.value);
+        return this.numberToRuntimeValue(left.value + right.value);
       case "-":
-        return new IntValue(left.value - right.value);
+        return this.numberToRuntimeValue(left.value - right.value);
       case "*":
-        return new IntValue(left.value * right.value);
+        return this.numberToRuntimeValue(left.value * right.value);
       case "/":
-        return new IntValue(left.value / right.value);
+        return this.numberToRuntimeValue(left.value / right.value);
       default:
         throw new Error(`演算子 ${String(node.operator)} は未定義です`);
     }
@@ -81,13 +88,13 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
     }
   }
   visitInt(node: IntNode): RuntimeValue {
-    const value = node.value;
-    if (!Number.isInteger(value)) {
-      throw new Error(
-        `Int 型が期待されましたが、${String(value)} が入力されました`,
-      );
-    }
-    return new IntValue(value);
+    return new IntValue(node.value);
+  }
+  visitFloat(node: FloatNode): RuntimeValue {
+    return new FloatValue(node.value);
+  }
+  visitString(node: StringNode): RuntimeValue {
+    return new StringValue(node.value);
   }
   visitCall(node: CallNode): RuntimeValue {
     const func = this.funcs.get(node.name);
@@ -131,5 +138,12 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
       }
     }
     return new IntValue(0); // 正常動作として 0 を返す
+  }
+  // ヘルパー関数
+  private numberToRuntimeValue(value: number): RuntimeValue {
+    if (Number.isInteger(value)) {
+      return new IntValue(value);
+    }
+    return new FloatValue(value);
   }
 }
