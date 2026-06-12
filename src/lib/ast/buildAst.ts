@@ -5,12 +5,14 @@ import {
   CompContext,
   EqContext,
   ExprContext,
+  FloatContext,
   IfContext,
   IntContext,
   MulDivContext,
   ParensContext,
   ProgramContext,
   StatementContext,
+  StringContext,
   VarContext,
 } from "../parser/generated/BoQQIParser.js";
 import { AssignNode } from "./nodes/assign.js";
@@ -18,10 +20,12 @@ import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
 import { CallNode } from "./nodes/call.js";
 import { CompareNode, type CompareOperator } from "./nodes/compare.js";
 import type { ExprNode } from "./nodes/expr.js";
+import { FloatNode } from "./nodes/float.js";
 import { IfNode } from "./nodes/if.js";
 import { IntNode } from "./nodes/int.js";
 import { ProgramNode } from "./nodes/program.js";
 import type { StatementNode } from "./nodes/statement.js";
+import { StringNode } from "./nodes/string.js";
 import { VarNode } from "./nodes/var.js";
 
 export function buildProgramAst(ctx: ProgramContext): ProgramNode {
@@ -98,6 +102,14 @@ export function buildExprAst(ctx: ExprContext): ExprNode {
     return new IntNode(Number(ctx.INT().getText()));
   }
 
+  if (ctx instanceof FloatContext) {
+    return new FloatNode(Number(ctx.FLOAT().getText()));
+  }
+
+  if (ctx instanceof StringContext) {
+    return new StringNode(parseStringLiteral(ctx.STRING().getText()));
+  }
+
   if (ctx instanceof ParensContext) {
     return buildExprAst(ctx.expr());
   }
@@ -147,6 +159,27 @@ export function buildExprAst(ctx: ExprContext): ExprNode {
   }
 
   throw new Error(`Unsupported expression context: ${ctx.constructor.name}`);
+}
+
+function parseStringLiteral(value: string): string {
+  return value.slice(1, -1).replace(/\\([btnr"\\])/g, (_, escaped: string) => {
+    switch (escaped) {
+      case "b":
+        return "\b";
+      case "t":
+        return "\t";
+      case "n":
+        return "\n";
+      case "r":
+        return "\r";
+      case '"':
+        return '"';
+      case "\\":
+        return "\\";
+      default:
+        return escaped;
+    }
+  });
 }
 
 function isBinaryOperator(value: string | undefined): value is BinaryOperator {

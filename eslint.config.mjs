@@ -21,8 +21,6 @@ export default defineConfig([
       // エラー部分(CI通らない)
       semi: ["error", "always"], // 末尾にセミコロンがない場合エラー
       strict: ["error", "global"], // 常に厳格モード
-      // 警告部分
-      quotes: ["warn", "double"], // 文字列を " で括っていないと警告
       // 参考: https://zenn.dev/noshiro_piko/articles/take-full-advantage-of-typescript-eslint
       // if 文などの条件式が入るところに boolean 以外の型を認めない
       "@typescript-eslint/strict-boolean-expressions": [
