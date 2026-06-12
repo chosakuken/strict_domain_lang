@@ -1,6 +1,7 @@
 import {
   AddSubContext,
   AssignContext,
+  BoolContext,
   CallContext,
   CompContext,
   DeclareContext,
@@ -18,6 +19,7 @@ import {
 } from "../parser/generated/BoQQIParser.js";
 import { AssignNode } from "./nodes/assign.js";
 import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
+import { BoolNode } from "./nodes/bool.js";
 import { CallNode } from "./nodes/call.js";
 import { CompareNode, type CompareOperator } from "./nodes/compare.js";
 import { DeclareNode } from "./nodes/declare.js";
@@ -125,6 +127,10 @@ export function buildExprAst(ctx: ExprContext): ExprNode {
 
   if (ctx instanceof StringContext) {
     return new StringNode(parseStringLiteral(ctx.STRING().getText()));
+  }
+
+  if (ctx instanceof BoolContext) {
+    return new BoolNode(ctx.boolean().TRUE() !== null);
   }
 
   if (ctx instanceof ParensContext) {
