@@ -162,26 +162,24 @@ export function buildExprAst(ctx: ExprContext): ExprNode {
 }
 
 function parseStringLiteral(value: string): string {
-  return value
-    .slice(1, -1)
-    .replace(/\\([btnr"\\])/g, (_, escaped: string) => {
-      switch (escaped) {
-        case "b":
-          return "\b";
-        case "t":
-          return "\t";
-        case "n":
-          return "\n";
-        case "r":
-          return "\r";
-        case '"':
-          return '"';
-        case "\\":
-          return "\\";
-        default:
-          return escaped;
-      }
-    });
+  return value.slice(1, -1).replace(/\\([btnr"\\])/g, (_, escaped: string) => {
+    switch (escaped) {
+      case "b":
+        return "\b";
+      case "t":
+        return "\t";
+      case "n":
+        return "\n";
+      case "r":
+        return "\r";
+      case '"':
+        return '"';
+      case "\\":
+        return "\\";
+      default:
+        return escaped;
+    }
+  });
 }
 
 function isBinaryOperator(value: string | undefined): value is BinaryOperator {
