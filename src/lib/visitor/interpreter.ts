@@ -19,17 +19,24 @@ import { FloatNode } from "../ast/nodes/float.js";
 import { StringNode } from "../ast/nodes/string.js";
 import { DeclareNode } from "../ast/nodes/declare.js";
 
+interface Var {
+  domain?: {
+    max: number;
+    min: number;
+  };
+  runtimeValue: RuntimeValue;
+}
 type Func = (args: RuntimeValue[]) => RuntimeValue;
 
 export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   private funcs: Map<string, Func>; // 関数表
-  private vars: Map<string, RuntimeValue>; // 変数表
+  private vars: Map<string, Var>; // 変数表
   private readonly output: (text: string) => void; // 出力先
 
   constructor(private readonly outputDevice: (text: string) => void) {
     this.output = outputDevice;
     this.funcs = new Map<string, Func>();
-    this.vars = new Map<string, RuntimeValue>();
+    this.vars = new Map<string, Var>();
     // 組み込み関数
     this.funcs.set("print", (args: RuntimeValue[]) => {
       for (const arg of args) {
@@ -132,55 +139,49 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
   }
   visitAssign(node: AssignNode): RuntimeValue {
     const value = node.expr.accept(this);
-    const currentValue = this.vars.get(node.name);
+    const currentVar = this.vars.get(node.name);
     // エラーハンドリング
-    if (currentValue === undefined) {
+    if (currentVar === undefined) {
       throw new Error(`変数 ${node.name} は宣言されていません`);
     }
-    if (value.type !== currentValue.type) {
+    if (value.type !== currentVar.runtimeValue.type) {
       throw new Error(
-        `変数 ${node.name} は ${currentValue.type} 型ですが、${value.type} 型が代入されようとしました`,
+        `変数 ${node.name} は ${currentVar.runtimeValue.type} 型ですが、${value.type} 型が代入されようとしました`,
       );
     }
-    this.vars.set(node.name, value);
+    this.assertWithinDomain(node.name, value, currentVar.domain);
+    this.vars.set(node.name, {
+      ...currentVar,
+      runtimeValue: value,
+    });
     return value;
   }
   visitDeclare(node: DeclareNode): RuntimeValue {
     if (this.vars.has(node.name)) {
       throw new Error(`変数 ${node.name} は既に宣言済みです`);
     }
+    const domain =
+      node.domain === undefined ? undefined : this.evalDomain(node);
+    const value =
+      node.initValue !== undefined
+        ? node.initValue.accept(this)
+        : this.defaultValue(node.type);
+    if (value.type !== node.type) {
+      throw new Error(
+        `変数 ${node.name} は ${node.type} 型ですが、${value.type} 型で初期化されようとしました`,
+      );
+    }
+    this.assertWithinDomain(node.name, value, domain);
+
     switch (node.type) {
       case "int":
-        this.vars.set(
-          node.name,
-          node.initValue !== undefined
-            ? node.initValue.accept(this)
-            : new IntValue(0),
-        );
-        break;
       case "float":
-        this.vars.set(
-          node.name,
-          node.initValue !== undefined
-            ? node.initValue.accept(this)
-            : new FloatValue(0.0),
-        );
-        break;
       case "string":
-        this.vars.set(
-          node.name,
-          node.initValue !== undefined
-            ? node.initValue.accept(this)
-            : new StringValue(""),
-        );
-        break;
       case "bool":
-        this.vars.set(
-          node.name,
-          node.initValue !== undefined
-            ? node.initValue.accept(this)
-            : new BoolValue(false),
-        );
+        this.vars.set(node.name, {
+          domain,
+          runtimeValue: value,
+        });
         break;
       default:
         throw new Error(`型 ${node.type} は存在しません`);
@@ -188,11 +189,11 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
     return new IntValue(0); // 正常動作として 0 を返す
   }
   visitVar(node: VarNode): RuntimeValue {
-    const value = this.vars.get(node.name);
-    if (value === undefined) {
+    const variable = this.vars.get(node.name);
+    if (variable === undefined) {
       throw new Error(`変数 ${node.name} は未定義です`);
     }
-    return value;
+    return variable.runtimeValue;
   }
   visitIf(node: IfNode): RuntimeValue {
     const cond = node.cond.accept(this);
@@ -224,5 +225,53 @@ export class BoqqiInterpreter implements Visitor<RuntimeValue> {
       return new IntValue(Math.floor(value));
     }
     return new FloatValue(value);
+  }
+  private defaultValue(type: string): RuntimeValue {
+    switch (type) {
+      case "int":
+        return new IntValue(0);
+      case "float":
+        return new FloatValue(0.0);
+      case "string":
+        return new StringValue("");
+      case "bool":
+        return new BoolValue(false);
+      default:
+        throw new Error(`型 ${type} は存在しません`);
+    }
+  }
+  private evalDomain(node: DeclareNode): Var["domain"] {
+    if (node.domain === undefined) {
+      return undefined;
+    }
+
+    const max = node.domain.max.accept(this);
+    const min = node.domain.min.accept(this);
+
+    if (typeof max.value !== "number" || typeof min.value !== "number") {
+      throw new Error(`変数 ${node.name} の定義域には数値を指定してください`);
+    }
+
+    return {
+      max: max.value,
+      min: min.value,
+    };
+  }
+  private assertWithinDomain(
+    name: string,
+    value: RuntimeValue,
+    domain: Var["domain"],
+  ): void {
+    if (domain === undefined) {
+      return;
+    }
+    if (typeof value.value !== "number") {
+      throw new Error(`変数 ${name} の定義域チェックには数値が必要です`);
+    }
+    if (value.value < domain.min || value.value > domain.max) {
+      throw new Error(
+        `変数 ${name} に定義域 [${String(domain.min)}, ${String(domain.max)}] 外の値 ${String(value.value)} が代入されようとしました`,
+      );
+    }
   }
 }

@@ -29,8 +29,14 @@ args
     ;
 
 declare
-    : type IDENT
-    | type IDENT EQUAL expr
+    : numericType domain IDENT
+    | numericType domain IDENT EQUAL expr
+    | nonNumericType IDENT
+    | nonNumericType IDENT EQUAL expr
+    ;
+
+domain
+    : LBRACE MAX COLON expr COMMA MIN COLON expr RBRACE
     ;
 
 assign
@@ -38,9 +44,17 @@ assign
     ;
 
 type
+    : numericType
+    | nonNumericType
+    ;
+
+numericType
     : TYPE_INT
     | TYPE_FLOAT
-    | TYPE_STRING
+    ;
+
+nonNumericType
+    : TYPE_STRING
     | TYPE_BOOL
     ;
 

@@ -8,8 +8,11 @@ import { IfContext } from "./BoQQIParser.js";
 import { CallContext } from "./BoQQIParser.js";
 import { ArgsContext } from "./BoQQIParser.js";
 import { DeclareContext } from "./BoQQIParser.js";
+import { DomainContext } from "./BoQQIParser.js";
 import { AssignContext } from "./BoQQIParser.js";
 import { TypeContext } from "./BoQQIParser.js";
+import { NumericTypeContext } from "./BoQQIParser.js";
+import { NonNumericTypeContext } from "./BoQQIParser.js";
 import { ParensContext } from "./BoQQIParser.js";
 import { FloatContext } from "./BoQQIParser.js";
 import { IntContext } from "./BoQQIParser.js";
@@ -89,6 +92,16 @@ export class BoQQIParserListener implements ParseTreeListener {
      */
     exitDeclare?: (ctx: DeclareContext) => void;
     /**
+     * Enter a parse tree produced by `BoQQIParser.domain`.
+     * @param ctx the parse tree
+     */
+    enterDomain?: (ctx: DomainContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.domain`.
+     * @param ctx the parse tree
+     */
+    exitDomain?: (ctx: DomainContext) => void;
+    /**
      * Enter a parse tree produced by `BoQQIParser.assign`.
      * @param ctx the parse tree
      */
@@ -108,6 +121,26 @@ export class BoQQIParserListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitType?: (ctx: TypeContext) => void;
+    /**
+     * Enter a parse tree produced by `BoQQIParser.numericType`.
+     * @param ctx the parse tree
+     */
+    enterNumericType?: (ctx: NumericTypeContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.numericType`.
+     * @param ctx the parse tree
+     */
+    exitNumericType?: (ctx: NumericTypeContext) => void;
+    /**
+     * Enter a parse tree produced by `BoQQIParser.nonNumericType`.
+     * @param ctx the parse tree
+     */
+    enterNonNumericType?: (ctx: NonNumericTypeContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.nonNumericType`.
+     * @param ctx the parse tree
+     */
+    exitNonNumericType?: (ctx: NonNumericTypeContext) => void;
     /**
      * Enter a parse tree produced by the `Parens`
      * labeled alternative in `BoQQIParser.expr`.

@@ -4,6 +4,8 @@ IF : 'if' ;
 ELSE : 'else' ;
 TRUE : 'true' ;
 FALSE : 'false' ;
+MAX : 'max' ;
+MIN : 'min' ;
 
 TYPE_INT : 'int' ;
 TYPE_FLOAT : 'float' ;
@@ -29,6 +31,7 @@ RPAREN : ')' ;
 LBRACE : '{' ;
 RBRACE : '}' ;
 COMMA : ',' ;
+COLON : ':' ;
 SEMI : ';' ;
 
 FLOAT : [0-9]+ '.' [0-9]+ ;

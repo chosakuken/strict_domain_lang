@@ -5,6 +5,7 @@ import {
   CallContext,
   CompContext,
   DeclareContext,
+  DomainContext,
   EqContext,
   ExprContext,
   FloatContext,
@@ -22,7 +23,7 @@ import { BinaryNode, type BinaryOperator } from "./nodes/binary.js";
 import { BoolNode } from "./nodes/bool.js";
 import { CallNode } from "./nodes/call.js";
 import { CompareNode, type CompareOperator } from "./nodes/compare.js";
-import { DeclareNode } from "./nodes/declare.js";
+import { DeclareNode, type DomainNode } from "./nodes/declare.js";
 import type { ExprNode } from "./nodes/expr.js";
 import { FloatNode } from "./nodes/float.js";
 import { IfNode } from "./nodes/if.js";
@@ -101,12 +102,43 @@ export function buildAssignAst(ctx: AssignContext): AssignNode {
 
 export function buildDeclareAst(ctx: DeclareContext): DeclareNode {
   const initExpr = ctx.expr();
+  const type = getDeclaredType(ctx);
+  const domainContext = ctx.domain();
+  const domain =
+    domainContext === null ? undefined : buildDomainAst(domainContext);
+
+  if ((type === "int" || type === "float") && domain === undefined) {
+    throw new Error(`${type} 型の宣言には定義域が必要です: ${ctx.getText()}`);
+  }
 
   return new DeclareNode(
-    ctx.type().getText(),
+    type,
     ctx.IDENT().getText(),
+    domain,
     initExpr === null ? undefined : buildExprAst(initExpr),
   );
+}
+
+function getDeclaredType(ctx: DeclareContext): string {
+  const type = ctx.getChild(0)?.getText();
+  if (type === undefined) {
+    throw new Error(`宣言の型が見つかりません: ${ctx.getText()}`);
+  }
+  return type;
+}
+
+export function buildDomainAst(ctx: DomainContext): DomainNode {
+  const max = ctx.expr(0);
+  const min = ctx.expr(1);
+
+  if (max === null || min === null) {
+    throw new Error(`定義域に max/min が不足しています: ${ctx.getText()}`);
+  }
+
+  return {
+    max: buildExprAst(max),
+    min: buildExprAst(min),
+  };
 }
 
 export function buildCallAst(ctx: CallContext): CallNode {
