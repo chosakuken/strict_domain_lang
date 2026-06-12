@@ -5,7 +5,9 @@ import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "a
 import { ProgramContext } from "./BoQQIParser.js";
 import { StatementContext } from "./BoQQIParser.js";
 import { IfContext } from "./BoQQIParser.js";
+import { DeclareContext } from "./BoQQIParser.js";
 import { AssignContext } from "./BoQQIParser.js";
+import { TypeContext } from "./BoQQIParser.js";
 import { ParensContext } from "./BoQQIParser.js";
 import { FloatContext } from "./BoQQIParser.js";
 import { IntContext } from "./BoQQIParser.js";
@@ -55,6 +57,16 @@ export class BoQQIParserListener implements ParseTreeListener {
      */
     exitIf?: (ctx: IfContext) => void;
     /**
+     * Enter a parse tree produced by `BoQQIParser.declare`.
+     * @param ctx the parse tree
+     */
+    enterDeclare?: (ctx: DeclareContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.declare`.
+     * @param ctx the parse tree
+     */
+    exitDeclare?: (ctx: DeclareContext) => void;
+    /**
      * Enter a parse tree produced by `BoQQIParser.assign`.
      * @param ctx the parse tree
      */
@@ -64,6 +76,16 @@ export class BoQQIParserListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitAssign?: (ctx: AssignContext) => void;
+    /**
+     * Enter a parse tree produced by `BoQQIParser.type`.
+     * @param ctx the parse tree
+     */
+    enterType?: (ctx: TypeContext) => void;
+    /**
+     * Exit a parse tree produced by `BoQQIParser.type`.
+     * @param ctx the parse tree
+     */
+    exitType?: (ctx: TypeContext) => void;
     /**
      * Enter a parse tree produced by the `Parens`
      * labeled alternative in `BoQQIParser.expr`.
