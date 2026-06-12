@@ -29,8 +29,10 @@ args
     ;
 
 declare
-    : type domain? IDENT
-    | type domain? IDENT EQUAL expr
+    : numericType domain IDENT
+    | numericType domain IDENT EQUAL expr
+    | nonNumericType IDENT
+    | nonNumericType IDENT EQUAL expr
     ;
 
 domain
@@ -42,9 +44,17 @@ assign
     ;
 
 type
+    : numericType
+    | nonNumericType
+    ;
+
+numericType
     : TYPE_INT
     | TYPE_FLOAT
-    | TYPE_STRING
+    ;
+
+nonNumericType
+    : TYPE_STRING
     | TYPE_BOOL
     ;
 

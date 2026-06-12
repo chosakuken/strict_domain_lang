@@ -2,18 +2,25 @@ import { Visitor } from "../../visitor/visitor.js";
 import { ExprNode } from "./expr.js";
 import { AstNode } from "./node.js";
 
+export interface DomainNode {
+  readonly max: ExprNode;
+  readonly min: ExprNode;
+}
+
 export class DeclareNode implements AstNode {
   readonly kind: "declare";
   readonly type: string;
   readonly name: string;
+  readonly domain?: DomainNode;
   readonly initValue?: ExprNode;
   accept<T>(visitor: Visitor<T>): T {
     return visitor.visitDeclare(this);
   }
-  constructor(t: string, n: string, i?: ExprNode) {
+  constructor(t: string, n: string, d?: DomainNode, i?: ExprNode) {
     this.kind = "declare";
     this.type = t;
     this.name = n;
+    this.domain = d;
     this.initValue = i;
   }
 }
