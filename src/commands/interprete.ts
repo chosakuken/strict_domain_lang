@@ -2,10 +2,10 @@ import { Command } from "commander";
 import { readFile } from "node:fs/promises";
 import process from "node:process";
 import { parseToAst } from "../lib/ast/parseToAst.js";
-import { BoqqiInterpreter } from "../lib/visitor/interpreter.js";
+import { BoqqiInterpreter } from "../lib/visitor/interpreter/interpreter.js";
 
-export function createRunCommand(): Command {
-  return new Command("run")
+export function createInterpreteCommand(): Command {
+  return new Command("interprete")
     .description("")
     .argument("<file>", "source file path")
     .action(async (file: string) => {

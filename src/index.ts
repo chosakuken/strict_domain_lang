@@ -4,7 +4,7 @@ import { Command } from "commander";
 import { createLexerCommand } from "./commands/lex.js";
 import { createParserCommand } from "./commands/parse.js";
 import { createAstDumpCommand } from "./commands/ast-dump.js";
-import { createRunCommand } from "./commands/run.js";
+import { createInterpreteCommand } from "./commands/interprete.js";
 
 export function createCli(): Command {
   const program = new Command();
@@ -20,7 +20,7 @@ export function createCli(): Command {
   program.addCommand(createLexerCommand());
   program.addCommand(createParserCommand());
   program.addCommand(createAstDumpCommand());
-  program.addCommand(createRunCommand());
+  program.addCommand(createInterpreteCommand());
 
   return program;
 }
