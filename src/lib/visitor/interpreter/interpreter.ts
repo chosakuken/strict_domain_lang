@@ -1,23 +1,23 @@
-import { Visitor } from "./visitor.js";
+import { Visitor } from "../visitor.js";
 import { RuntimeValue } from "./runtimeValue/runtimeValue.js";
-import { ProgramNode } from "../ast/nodes/program.js";
+import { ProgramNode } from "../../ast/nodes/program.js";
 import {
   BoolValue,
   FloatValue,
   IntValue,
   StringValue,
 } from "./runtimeValue/valuableValue.js";
-import { BinaryNode } from "../ast/nodes/binary.js";
-import { BoolNode } from "../ast/nodes/bool.js";
-import { IntNode } from "../ast/nodes/int.js";
-import { CallNode } from "../ast/nodes/call.js";
-import { AssignNode } from "../ast/nodes/assign.js";
-import { VarNode } from "../ast/nodes/var.js";
-import { CompareNode } from "../ast/nodes/compare.js";
-import { IfNode } from "../ast/nodes/if.js";
-import { FloatNode } from "../ast/nodes/float.js";
-import { StringNode } from "../ast/nodes/string.js";
-import { DeclareNode } from "../ast/nodes/declare.js";
+import { BinaryNode } from "../../ast/nodes/binary.js";
+import { BoolNode } from "../../ast/nodes/bool.js";
+import { IntNode } from "../../ast/nodes/int.js";
+import { CallNode } from "../../ast/nodes/call.js";
+import { AssignNode } from "../../ast/nodes/assign.js";
+import { VarNode } from "../../ast/nodes/var.js";
+import { CompareNode } from "../../ast/nodes/compare.js";
+import { IfNode } from "../../ast/nodes/if.js";
+import { FloatNode } from "../../ast/nodes/float.js";
+import { StringNode } from "../../ast/nodes/string.js";
+import { DeclareNode } from "../../ast/nodes/declare.js";
 
 interface Var {
   domain?: {

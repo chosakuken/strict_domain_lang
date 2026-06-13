@@ -1,0 +1,328 @@
+import {
+  BoolValue,
+  FloatValue,
+  IntValue,
+  StringValue,
+} from "../visitor/interpreter/runtimeValue/valuableValue.js";
+import { RuntimeValue } from "../visitor/interpreter/runtimeValue/runtimeValue.js";
+import { DomainSpec, Instruction, ValueType } from "./instruction.js";
+
+interface Var {
+  readonly domain?: DomainSpec;
+  readonly runtimeValue: RuntimeValue;
+}
+
+type Func = (args: RuntimeValue[]) => RuntimeValue;
+
+export class BoqqiVM {
+  private pc = 0;
+  private readonly stack: RuntimeValue[] = [];
+  private readonly vars = new Map<string, Var>();
+  private readonly funcs = new Map<string, Func>();
+
+  constructor(
+    private readonly instructions: Instruction[],
+    private readonly output: (text: string) => void,
+  ) {
+    this.funcs.set("print", (args: RuntimeValue[]) => {
+      for (const arg of args) {
+        this.output(`${String(arg.value)}\n`);
+      }
+      return new IntValue(0);
+    });
+  }
+
+  run(): RuntimeValue {
+    while (this.pc < this.instructions.length) {
+      const instruction = this.instructions[this.pc];
+
+      this.pc += 1;
+      this.execute(instruction);
+    }
+
+    return new IntValue(0);
+  }
+
+  private execute(instruction: Instruction): void {
+    switch (instruction.op) {
+      case "PUSH_INT":
+        this.stack.push(new IntValue(instruction.value));
+        break;
+      case "PUSH_FLOAT":
+        this.stack.push(new FloatValue(instruction.value));
+        break;
+      case "PUSH_STRING":
+        this.stack.push(new StringValue(instruction.value));
+        break;
+      case "PUSH_BOOL":
+        this.stack.push(new BoolValue(instruction.value));
+        break;
+      case "LOAD":
+        this.stack.push(this.load(instruction.name));
+        break;
+      case "STORE":
+        this.store(instruction.name, this.pop());
+        break;
+      case "DECLARE":
+        this.declare(
+          instruction.name,
+          instruction.type,
+          this.pop(),
+          this.popDomain(instruction.name, instruction.hasDomain),
+        );
+        break;
+      case "ADD":
+      case "SUB":
+      case "MUL":
+      case "DIV":
+        this.executeBinary(instruction.op);
+        break;
+      case "EQ":
+      case "NE":
+      case "GT":
+      case "LT":
+      case "GE":
+      case "LE":
+        this.executeCompare(instruction.op);
+        break;
+      case "JUMP":
+        this.jump(instruction.target);
+        break;
+      case "JUMP_IF_FALSE":
+        this.jumpIfFalse(instruction.target);
+        break;
+      case "CALL":
+        this.call(instruction.name, instruction.argc);
+        break;
+      case "POP":
+        this.pop();
+        break;
+    }
+  }
+
+  private executeBinary(op: "ADD" | "SUB" | "MUL" | "DIV"): void {
+    const right = this.pop();
+    const left = this.pop();
+
+    if (typeof left.value !== "number") {
+      throw new Error("式の左辺には数値を入力しなければなりません");
+    }
+    if (typeof right.value !== "number") {
+      throw new Error("式の右辺には数値を入力しなければなりません");
+    }
+
+    switch (op) {
+      case "ADD":
+        this.stack.push(
+          this.numberToRuntimeValue(
+            this.numericResultType(left, right),
+            left.value + right.value,
+          ),
+        );
+        break;
+      case "SUB":
+        this.stack.push(
+          this.numberToRuntimeValue(
+            this.numericResultType(left, right),
+            left.value - right.value,
+          ),
+        );
+        break;
+      case "MUL":
+        this.stack.push(
+          this.numberToRuntimeValue(
+            this.numericResultType(left, right),
+            left.value * right.value,
+          ),
+        );
+        break;
+      case "DIV":
+        if (right.value === 0) {
+          throw new Error("0 除算が検出されました");
+        }
+        this.stack.push(
+          this.numberToRuntimeValue(
+            this.numericResultType(left, right),
+            left.value / right.value,
+          ),
+        );
+        break;
+    }
+  }
+
+  private executeCompare(op: "EQ" | "NE" | "GT" | "LT" | "GE" | "LE"): void {
+    const right = this.pop();
+    const left = this.pop();
+
+    switch (op) {
+      case "EQ":
+        this.stack.push(new BoolValue(left.value == right.value));
+        break;
+      case "NE":
+        this.stack.push(new BoolValue(left.value != right.value));
+        break;
+      case "GT":
+        this.stack.push(new BoolValue(left.value > right.value));
+        break;
+      case "LT":
+        this.stack.push(new BoolValue(left.value < right.value));
+        break;
+      case "GE":
+        this.stack.push(new BoolValue(left.value >= right.value));
+        break;
+      case "LE":
+        this.stack.push(new BoolValue(left.value <= right.value));
+        break;
+    }
+  }
+
+  private declare(
+    name: string,
+    type: ValueType,
+    value: RuntimeValue,
+    domain: DomainSpec | undefined,
+  ): void {
+    if (this.vars.has(name)) {
+      throw new Error(`変数 ${name} は既に宣言済みです`);
+    }
+    if (value.type !== type) {
+      throw new Error(
+        `変数 ${name} は ${type} 型ですが、${value.type} 型で初期化されようとしました`,
+      );
+    }
+
+    this.assertWithinDomain(name, value, domain);
+    this.vars.set(name, { domain, runtimeValue: value });
+  }
+
+  private store(name: string, value: RuntimeValue): void {
+    const currentVar = this.vars.get(name);
+
+    if (currentVar === undefined) {
+      throw new Error(`変数 ${name} は宣言されていません`);
+    }
+    if (value.type !== currentVar.runtimeValue.type) {
+      throw new Error(
+        `変数 ${name} は ${currentVar.runtimeValue.type} 型ですが、${value.type} 型が代入されようとしました`,
+      );
+    }
+
+    this.assertWithinDomain(name, value, currentVar.domain);
+    this.vars.set(name, {
+      ...currentVar,
+      runtimeValue: value,
+    });
+  }
+
+  private load(name: string): RuntimeValue {
+    const variable = this.vars.get(name);
+    if (variable === undefined) {
+      throw new Error(`変数 ${name} は未定義です`);
+    }
+
+    return variable.runtimeValue;
+  }
+
+  private jump(target: number): void {
+    this.assertValidJumpTarget(target);
+    this.pc = target;
+  }
+
+  private jumpIfFalse(target: number): void {
+    const cond = this.pop();
+
+    if (typeof cond.value !== "boolean") {
+      throw new Error("if 文の条件式には真偽値を入力しなければなりません");
+    }
+
+    if (!cond.value) {
+      this.jump(target);
+    }
+  }
+
+  private call(name: string, argc: number): void {
+    const func = this.funcs.get(name);
+    if (func === undefined) {
+      throw new Error(`関数 ${name} は未定義です`);
+    }
+
+    const args = this.stack.splice(this.stack.length - argc, argc);
+    if (args.length !== argc) {
+      throw new Error(`関数 ${name} の引数が不足しています`);
+    }
+
+    this.stack.push(func(args));
+  }
+
+  private pop(): RuntimeValue {
+    const value = this.stack.pop();
+    if (value === undefined) {
+      throw new Error("スタックが空です");
+    }
+
+    return value;
+  }
+
+  private popDomain(name: string, hasDomain: boolean): DomainSpec | undefined {
+    if (!hasDomain) {
+      return undefined;
+    }
+
+    const min = this.pop();
+    const max = this.pop();
+
+    if (typeof max.value !== "number" || typeof min.value !== "number") {
+      throw new Error(`変数 ${name} の定義域には数値を指定してください`);
+    }
+
+    return {
+      max: max.value,
+      min: min.value,
+    };
+  }
+
+  private numericResultType(
+    left: RuntimeValue,
+    right: RuntimeValue,
+  ): ValueType {
+    return left.type === "int" && right.type === "int" ? "int" : "float";
+  }
+
+  private numberToRuntimeValue(type: ValueType, value: number): RuntimeValue {
+    if (!Number.isFinite(value)) {
+      throw new Error("計算結果が有限の数値ではありません");
+    }
+    if (type === "int") {
+      return new IntValue(Math.floor(value));
+    }
+    return new FloatValue(value);
+  }
+
+  private assertWithinDomain(
+    name: string,
+    value: RuntimeValue,
+    domain: DomainSpec | undefined,
+  ): void {
+    if (domain === undefined) {
+      return;
+    }
+    if (typeof value.value !== "number") {
+      throw new Error(`変数 ${name} の定義域チェックには数値が必要です`);
+    }
+    if (value.value < domain.min || value.value > domain.max) {
+      throw new Error(
+        `変数 ${name} に定義域 [${String(domain.min)}, ${String(domain.max)}] 外の値 ${String(value.value)} が代入されようとしました`,
+      );
+    }
+  }
+
+  private assertValidJumpTarget(target: number): void {
+    if (
+      !Number.isInteger(target) ||
+      target < 0 ||
+      target > this.instructions.length
+    ) {
+      throw new Error(`ジャンプ先 ${String(target)} は不正です`);
+    }
+  }
+}
